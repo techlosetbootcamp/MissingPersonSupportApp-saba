@@ -1,41 +1,121 @@
 
-
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, Alert } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 const Register = () => {
-  const [isSelected, setSelection] = React.useState(false);
+  const [isSelected, setSelection] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-const onRegister = ()=> {
-  auth().createUserWithEmailAndPassword(email, password)
+  const [username, setUsername] = useState('');
+ 
+  // const onRegister = () => {
+  //   // Create user with email and password
+  //   auth()
+  //     .createUserWithEmailAndPassword(email, password)
+  //     .then(async (userCredential) => {
+  //       // Get the user ID
+  //       const userId = userCredential.user.uid;
 
-  .then(() => {
-    Alert.alert('User account created & signed in!');
-  })
-  .catch(error => {
-    if (error.code === 'auth/email-already-in-use') {
-      Alert.alert('That email address is already in use!');
-    }
+  //       // Save user information (excluding password) to Firestore
+  //       await firestore()
+  //         .collection('User')
+  //         .doc(userId) // Use the user ID as the document ID
+  //         .set({
+  //           username: username,
+  //           email: email.toLowerCase(),
+  //         })
+  //         .then(() => {
+  //           Alert.alert('User account created & signed in!');
+              
+     
+  //         })
+  //         .catch((error) => {
+  //           Alert.alert('Failed to save user data!');
+  //           console.error(error);
+  //         });
+  //     })
+  //     .catch(error => {
+  //       if (error.code === 'auth/email-already-in-use') {
+  //         Alert.alert('That email address is already in use!');
+  //       }
 
-    if (error.code === 'auth/invalid-email') {
-      Alert.alert('That email address is invalid!');
-    }
+  //       if (error.code === 'auth/invalid-email') {
+  //         Alert.alert('That email address is invalid!');
+  //       }
 
-    console.error(error);
-  });
+  //       console.error(error);
+  //     });
+  // };
 
 
 
-}
+
+
+
+
+  const onRegister = () => {
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(async (userCredential) => {
+        // Get the user ID
+        const user = userCredential.user;
+  
+        // Set display name and photo URL in Firebase Authentication
+        await user.updateProfile({
+          displayName: username,
+       
+          // photoURL: 'null', // Replace with your default image URL or let it be null
+        });
+  
+        // Save user information (excluding password) to Firestore
+        await firestore()
+          .collection('User')
+          .doc(user.uid) // Use the user ID as the document ID
+          .set({
+            username: username,
+            email: email.toLowerCase(),
+          })
+          .then(() => {
+            Alert.alert('User account created & signed in!');
+            // Navigate to another screen if needed
+            // prop.navigation.navigate('Home'); // Replace 'Home' with your desired screen
+          })
+          .catch((error) => {
+            Alert.alert('Failed to save user data!');
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          Alert.alert('That email address is already in use!');
+        }
+  
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('That email address is invalid!');
+        }
+  
+        console.error(error);
+      });
+  };
+  
+
+
+
+
+
+
+
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
         <Image
-          source={require('../../assets/RegVector.png')} 
+          source={require('../../assets/RegVector.png')}
           style={styles.topRightImage}
           resizeMode="contain"
         />
@@ -48,6 +128,8 @@ const onRegister = ()=> {
           <TextInput
             style={[styles.input, { color: '#101828', fontSize: 16, fontWeight: '400' }]}
             placeholder="Enter your name"
+            value={username}
+            onChangeText={setUsername}
           />
         </View>
 
@@ -56,7 +138,7 @@ const onRegister = ()=> {
 
           <View style={styles.inputWithIcon}>
             <Image
-              source={require('../../assets/Icon.png')} 
+              source={require('../../assets/Icon.png')}
               style={styles.icon}
             />
             <TextInput
@@ -65,7 +147,7 @@ const onRegister = ()=> {
               keyboardType="email-address"
               placeholderTextColor="#888"
               value={email}
-              onChangeText={value => setEmail(value)}
+              onChangeText={setEmail}
             />
           </View>
 
@@ -79,12 +161,10 @@ const onRegister = ()=> {
             placeholder="Enter your password"
             secureTextEntry={true}
             value={password}
-            onChangeText={value => setPassword(value)}
+            onChangeText={setPassword}
           />
           <Text style={styles.passwordText}>Your password must be 8 characters.</Text>
         </View>
-
-
 
         <View style={styles.checkboxContainer}>
           <CheckBox
@@ -92,23 +172,15 @@ const onRegister = ()=> {
             onClick={() => setSelection(!isSelected)}
             rightTextStyle={styles.checkboxLabel}
           />
-          <Text style={styles.checkboxLabel}>Remember me </Text>
-
-          
-   
-        
+          <Text style={styles.checkboxLabel}>Remember me</Text>
         </View>
 
-
         <View style={styles.leftAlignedContainer}>
-        
-        <Text style={styles.helperText}> Save my login details for next time.</Text>
-      </View>
-
-
+          <Text style={styles.helperText}>Save my login details for next time.</Text>
+        </View>
 
         <TouchableOpacity style={styles.button} onPress={onRegister}>
-          <Text style={styles.buttonText}   >Next</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>

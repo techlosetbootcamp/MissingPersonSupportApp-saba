@@ -1,38 +1,76 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Alert,
+} from 'react-native';
+
+import auth from '@react-native-firebase/auth';
+import {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ForgotPassword(prop: any) {
+
+
+export default function ForgotPassword(prop:any) {
   const navigation = useNavigation();
+
+  const [email, setEmail] = useState('');
+
+  const handlePasswordReset = () => {
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        Alert.alert('Reset email sent! Check your inbox.');
+      })
+      .catch(error => {
+        Alert.alert(error.message);
+      });
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => prop.navigation.navigate('Login')}>
-            <Image source={require('../../assets/Backspace.png')}  />
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => prop.navigation.navigate('Login')}>
+            <Image source={require('../../assets/Backspace.png')} />
           </TouchableOpacity>
           <Text style={styles.title}>Forgot Password</Text>
         </View>
-        
-        <Image source={require('../../assets/ForgotPass.png')} style={styles.image} />
+
+        <Image
+          source={require('../../assets/ForgotPass.png')}
+          style={styles.image}
+        />
 
         <Text style={styles.instructions}>
-          Please enter the email address associated with your account. We'll send you a verification code to reset your password.
+          Please enter the email address associated with your account. We'll
+          send you a verification code to reset your password.
         </Text>
 
         <Text style={styles.label}>Email</Text>
         <View style={styles.inputContainer}>
-          <Image source={require('../../assets/Icon.png')} style={styles.icon} />
-          <TextInput 
-            style={styles.input} 
+          <Image
+            source={require('../../assets/Icon.png')}
+            style={styles.icon}
+          />
+          <TextInput
+            style={styles.input}
             placeholder="Email"
             placeholderTextColor="#9ca3af"
             keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
           />
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handlePasswordReset}>
           <Text style={styles.buttonText}>Send Reset Code</Text>
         </TouchableOpacity>
       </View>
@@ -64,7 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '600',
     color: '#000000',
-  
   },
   image: {
     alignSelf: 'center',
@@ -81,10 +118,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 6,
-  
+
     color: '#121212',
     fontWeight: '500',
-    alignSelf: 'flex-start', // Aligns label to the left
+    alignSelf: 'flex-start',
   },
   inputContainer: {
     flexDirection: 'row',

@@ -1,48 +1,54 @@
-
-import { View,Alert, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import {
+  View,
+  Alert,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from 'react-native';
+import React, {useState} from 'react';
+// import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-export default function Login(prop: any) {
-  const navigation = useNavigation();
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+export default function Login(prop:any) {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+// const Navigation=useNavigation()
   const onLogin = () => {
-    auth().signInWithEmailAndPassword(email,password)
+    auth()
+      .signInWithEmailAndPassword(email, password)
 
-.then(response => {
-  Alert.alert('login successfully')
-prop.navigation.navigate('Home')
-console.log('response' , response)
-})
+      .then(response => {
+        Alert.alert('login successfully');
+        // prop.navigation.navigate('MainTabs');
+        console.log('response', response);
+      })
 
-.catch(error => {
-
-  console.log('error' , error)
-})
-
-
-  }
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
 
   GoogleSignin.configure({
-    webClientId: '305312098206-lo6d29tjpa69c5d0deecr69fab489il7.apps.googleusercontent.com',
+    webClientId:
+      '305312098206-lo6d29tjpa69c5d0deecr69fab489il7.apps.googleusercontent.com',
   });
 
-
-
-  const onGoogleButtonPress= async() => {
+  const onGoogleButtonPress = async () => {
     // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     // Get the users ID token
-    const { idToken } = await GoogleSignin.signIn();
-  
+    const {idToken} = await GoogleSignin.signIn();
+
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  
+
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
-  }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -54,29 +60,30 @@ console.log('response' , response)
         <View style={styles.inputLabelContainer}>
           <Text style={styles.label}>Email</Text>
           <View style={styles.inputContainer}>
-          <Image
+            <Image
               source={require('../../assets/Icon.png')}
               style={styles.icon}
             />
-            <TextInput 
-              style={styles.input} 
-              placeholder="Email" 
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
               keyboardType="email-address"
               value={email}
               onChangeText={value => setEmail(value)}
             />
           </View>
         </View>
-        
-        <Text style={styles.infoText}>Your email address is your username.</Text>
+
+        <Text style={styles.infoText}>
+          Your email address is your username.
+        </Text>
 
         <View style={styles.inputLabelContainer}>
           <Text style={styles.label}>Password</Text>
           <View style={styles.inputContainer}>
-           
-            <TextInput 
-              style={styles.input} 
-              placeholder="Password" 
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
               secureTextEntry
               value={password}
               onChangeText={value => setPassword(value)}
@@ -85,16 +92,18 @@ console.log('response' , response)
         </View>
 
         <TouchableOpacity style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonText} >Log in</Text>
+          <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
 
         <View style={styles.linkContainer}>
-          <TouchableOpacity onPress={() => prop.navigation.navigate('ForgotPassword')}>
+          <TouchableOpacity
+            onPress={() => prop.navigation.navigate('ForgotPassword')}>
             <Text style={styles.link}>Forget your password</Text>
           </TouchableOpacity>
           <Text style={styles.linkSeparator}>|</Text>
 
-          <TouchableOpacity onPress={() => prop.navigation.navigate('Register')}>
+          <TouchableOpacity
+            onPress={() => prop.navigation.navigate('Register')}>
             <Text style={styles.link}>Register for an account</Text>
           </TouchableOpacity>
         </View>
@@ -106,9 +115,7 @@ console.log('response' , response)
         </View>
 
         <TouchableOpacity onPress={onGoogleButtonPress}>
-          <Image
-            source={require('../../assets/GoogleIcon.png')}
-          />
+          <Image source={require('../../assets/GoogleIcon.png')} />
         </TouchableOpacity>
 
         <Image
@@ -116,6 +123,7 @@ console.log('response' , response)
           style={styles.bottomImage}
         />
       </View>
+      
     </ScrollView>
   );
 }
@@ -234,7 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#ddd',
-    padding:10,
-    backgroundColor:'#F2F5FF',
+    padding: 10,
+    backgroundColor: '#F2F5FF',
   },
 });
