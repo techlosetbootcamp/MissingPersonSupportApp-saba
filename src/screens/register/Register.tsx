@@ -1,119 +1,48 @@
 
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  Alert,
+} from 'react-native';
 import CheckBox from 'react-native-check-box';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { useAuth } from '../../hooks/useAuth';
 
 const Register = () => {
-  const [isSelected, setSelection] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
- 
-  // const onRegister = () => {
-  //   // Create user with email and password
-  //   auth()
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then(async (userCredential) => {
-  //       // Get the user ID
-  //       const userId = userCredential.user.uid;
-
-  //       // Save user information (excluding password) to Firestore
-  //       await firestore()
-  //         .collection('User')
-  //         .doc(userId) // Use the user ID as the document ID
-  //         .set({
-  //           username: username,
-  //           email: email.toLowerCase(),
-  //         })
-  //         .then(() => {
-  //           Alert.alert('User account created & signed in!');
-              
-     
-  //         })
-  //         .catch((error) => {
-  //           Alert.alert('Failed to save user data!');
-  //           console.error(error);
-  //         });
-  //     })
-  //     .catch(error => {
-  //       if (error.code === 'auth/email-already-in-use') {
-  //         Alert.alert('That email address is already in use!');
-  //       }
-
-  //       if (error.code === 'auth/invalid-email') {
-  //         Alert.alert('That email address is invalid!');
-  //       }
-
-  //       console.error(error);
-  //     });
-  // };
-
-
-
-
-
-
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    username,
+    setUsername,
+    isSelected,
+    setSelection,
+   
+   
+    register,
+   
+  } = useAuth();
 
   const onRegister = () => {
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(async (userCredential) => {
-        // Get the user ID
-        const user = userCredential.user;
-  
-        // Set display name and photo URL in Firebase Authentication
-        await user.updateProfile({
-          displayName: username,
-       
-          // photoURL: 'null', // Replace with your default image URL or let it be null
-        });
-  
-        // Save user information (excluding password) to Firestore
-        await firestore()
-          .collection('User')
-          .doc(user.uid) // Use the user ID as the document ID
-          .set({
-            username: username,
-            email: email.toLowerCase(),
-          })
-          .then(() => {
-            Alert.alert('User account created & signed in!');
-            // Navigate to another screen if needed
-            // prop.navigation.navigate('Home'); // Replace 'Home' with your desired screen
-          })
-          .catch((error) => {
-            Alert.alert('Failed to save user data!');
-            console.error(error);
-          });
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          Alert.alert('That email address is already in use!');
-        }
-  
-        if (error.code === 'auth/invalid-email') {
-          Alert.alert('That email address is invalid!');
-        }
-  
-        console.error(error);
-      });
+    if (email && password && username) {
+      register();
+    } else {
+     
+      Alert.alert('Please fill in all fields');
+    }
   };
-  
 
-
-
-
-
-
-
-
+ 
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-
         <Image
           source={require('../../assets/RegVector.png')}
           style={styles.topRightImage}
@@ -137,10 +66,7 @@ const Register = () => {
           <Text style={styles.label}>Email</Text>
 
           <View style={styles.inputWithIcon}>
-            <Image
-              source={require('../../assets/Icon.png')}
-              style={styles.icon}
-            />
+            <Image source={require('../../assets/Icon.png')} style={styles.icon} />
             <TextInput
               style={[styles.inputField, { color: '#101828', fontSize: 16, fontWeight: '400' }]}
               placeholder="Enter your email"
@@ -192,12 +118,10 @@ const Register = () => {
 };
 
 const styles = StyleSheet.create({
-
   leftAlignedContainer: {
     width: '80%',
     alignItems: 'flex-start',
-marginLeft:50,
-
+    marginLeft: 50,
   },
   container: {
     flex: 1,
@@ -221,16 +145,14 @@ marginLeft:50,
     marginBottom: 10,
     textAlign: 'center',
   },
-    input: {
+  input: {
     width: '100%',
-   
+
     borderWidth: 1,
     borderColor: '#D0D5DD',
     borderRadius: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
- 
-
   },
   subtitle: {
     fontSize: 23,
@@ -256,32 +178,28 @@ marginLeft:50,
     borderColor: '#D0D5DD',
     borderRadius: 8,
     paddingHorizontal: 10,
-  
   },
   icon: {
- 
     marginRight: 8,
   },
   inputField: {
-    flex: 1, 
+    flex: 1,
     fontSize: 16,
   },
   helperText: {
     fontSize: 14,
     color: '#667085',
     marginTop: 6,
- 
-  
-    fontWeight:'400'
-  },
 
+    fontWeight: '400',
+  },
 
   passwordText: {
     fontSize: 14,
     color: '#121212',
     marginTop: 6,
     textAlign: 'left',
-    fontWeight:'400'
+    fontWeight: '400',
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -291,17 +209,15 @@ marginLeft:50,
   checkboxLabel: {
     marginLeft: 6,
     fontSize: 14,
-    color:'#121212',
-     fontWeight:'500'
-
+    color: '#121212',
+    fontWeight: '500',
   },
   checkboxLabel2: {
     marginLeft: 6,
     fontSize: 14,
-    color:'#121212',
-     fontWeight:'500',
-     display:'none'
-
+    color: '#121212',
+    fontWeight: '500',
+    display: 'none',
   },
   button: {
     width: '80%',
@@ -322,8 +238,8 @@ marginLeft:50,
     color: '#5B59FE',
     marginTop: 31,
     textAlign: 'center',
-      fontWeight:'400',
-      textDecorationLine: 'underline', 
+    fontWeight: '400',
+    textDecorationLine: 'underline',
   },
 });
 

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import MissingPersonModal from '../../components/profileModal/ProfileModal';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
 export default function HomeScreen(prop: any) {
   const [profiles, setProfiles] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null); // Added error state
+  const [error, setError] = useState<string | null>(null);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<any>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
   useEffect(() => {
-    // Using a Firestore listener to get real-time updates
     const unsubscribe = firestore()
       .collection('Reports')
       .orderBy('timestamp', 'desc')
@@ -19,82 +23,83 @@ export default function HomeScreen(prop: any) {
             return {
               id: doc.id,
               ...data,
-          
             };
           });
-          setProfiles(profilesData); 
+          setProfiles(profilesData);
         },
         err => {
           console.error('Error fetching profiles:', err);
-          setError('Error fetching profiles'); 
+          setError('Error fetching profiles');
         }
       );
 
-    // Cleanup listener on component unmount
     return () => unsubscribe();
   }, []);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
-      {/* Display error if exists */}
       {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
 
-      {/* Header with Search */}
       <View style={styles.header}>
         <Text style={styles.logo}>Findr</Text>
         <Text style={styles.subtitle}>Search for hope</Text>
         <View style={styles.searchContainer}>
           <TextInput placeholder="Search" style={styles.searchInput} />
           <TouchableOpacity>
-          
-            <Image source={require('../../assets/Search.png')}  />
+            <Image source={require('../../assets/Search.png')} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Image Banner */}
       <View style={styles.bannerContainer}>
         <Image source={require('../../assets/Banner.png')} style={styles.bannerImage} />
       </View>
 
-      {/* Featured Profiles Section */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Featured Profiles</Text>
         <TouchableOpacity>
-          <Text style={styles.seeMore}>See More</Text>
+          <Text style={styles.seeMore}
+            onPress={() => navigation.navigate('FilterReport')}
+          >See More</Text>
         </TouchableOpacity>
       </View>
 
- 
       <ScrollView horizontal={true} style={styles.profilesContainer} showsHorizontalScrollIndicator={false}>
-        {profiles.map(profile => {
-        
-          return (
-            <View key={profile.id} style={styles.profileCard}>
-              <ImageBackground
-                source={{ uri: profile.photo || require('../../assets/kid3.png') }}
-                style={styles.profileImage}
-                imageStyle={{ borderRadius: 10 }}
-              >
-                <View style={styles.overlay}>
-                  <Text style={styles.missingText}>MISSING</Text>
-                  <Text style={styles.profileDetails}>
-                    Name: {profile.fullName}{"\n"}
-                    Age: {profile.age} ({profile.gender}){"\n"}
-                    Last Seen: {profile.lastSeen}{"\n"}
-                    Location: {profile.lastLocation}
-                  </Text>
-                  <TouchableOpacity style={styles.detailsButton}>
-                    <Text style={styles.detailsButtonText}>View Details</Text>
-                  </TouchableOpacity>
-                </View>
-              </ImageBackground>
-            </View>
-          );
-        })}
+        {profiles.map(profile => (
+          <View key={profile.id} style={styles.profileCard}>
+            <ImageBackground
+              source={{ uri: profile.photo || require('../../assets/kid3.png') }}
+              style={styles.profileImage}
+              imageStyle={{ borderRadius: 10 }}
+            >
+              <View style={styles.overlay}>
+                <Text style={styles.missingText}>MISSING</Text>
+                <Text style={styles.profileDetails}>
+                  Name: {profile.fullName}{"\n"}
+                  Age: {profile.age} ({profile.gender}){"\n"}
+                  Last Seen: {profile.lastSeen}{"\n"}
+                  Location: {profile.lastLocation}
+                </Text>
+                <TouchableOpacity
+                  style={styles.detailsButton}
+                  onPress={() => {
+                    setSelectedProfile(profile);
+                    setModalVisible(true);
+                  }}
+                >
+                  <Text style={styles.detailsButtonText}>View Details</Text>
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </View>
+        ))}
       </ScrollView>
 
-  
+      <MissingPersonModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        profile={selectedProfile}
+      />
     </ScrollView>
   );
 }

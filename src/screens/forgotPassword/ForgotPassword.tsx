@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   View,
@@ -9,28 +10,20 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { useAuth } from '../../hooks/useAuth';
 
-import auth from '@react-native-firebase/auth';
-import {useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
+export default function ForgotPassword(prop: any) {
+  const { email, setEmail, sendResetCode} = useAuth();
 
+  // React.useEffect(() => {
+  //   if (success) {
+  //     Alert.alert('Reset email sent! Check your inbox.');
+  //   }
 
-
-export default function ForgotPassword(prop:any) {
-  const navigation = useNavigation();
-
-  const [email, setEmail] = useState('');
-
-  const handlePasswordReset = () => {
-    auth()
-      .sendPasswordResetEmail(email)
-      .then(() => {
-        Alert.alert('Reset email sent! Check your inbox.');
-      })
-      .catch(error => {
-        Alert.alert(error.message);
-      });
-  };
+  //   if (error) {
+  //     Alert.alert(error);
+  //   }
+  // }, [success, error]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -38,7 +31,8 @@ export default function ForgotPassword(prop:any) {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => prop.navigation.navigate('Login')}>
+            onPress={() => prop.navigation.navigate('Login')}
+          >
             <Image source={require('../../assets/Backspace.png')} />
           </TouchableOpacity>
           <Text style={styles.title}>Forgot Password</Text>
@@ -70,7 +64,7 @@ export default function ForgotPassword(prop:any) {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handlePasswordReset}>
+        <TouchableOpacity style={styles.button} onPress={sendResetCode} >
           <Text style={styles.buttonText}>Send Reset Code</Text>
         </TouchableOpacity>
       </View>

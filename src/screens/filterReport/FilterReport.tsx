@@ -1,9 +1,8 @@
-import { sendEmail } from '../../utils/email'; 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, StyleSheet, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
- 
+// import auth from '@react-native-firebase/auth';
+import MissingPersonModal from '../../components/profileModal/ProfileModal';
 
 type MissingPerson = {
   id: string;
@@ -15,7 +14,7 @@ type MissingPerson = {
   photo: string;
 };
 
-const AllMissingPersonsScreen = ({ navigation}:any) => {
+const AllMissingPersonsScreen = ({ navigation }: any) => {
   const [profiles, setProfiles] = useState<MissingPerson[]>([]);
   const [filteredProfiles, setFilteredProfiles] = useState<MissingPerson[]>([]);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
@@ -23,10 +22,6 @@ const AllMissingPersonsScreen = ({ navigation}:any) => {
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<MissingPerson | null>(null);
-  const [currentLocation, setCurrentLocation] = useState('');
-  const [description, setDescription] = useState('');
-
-  const currentUser = auth().currentUser;
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -82,54 +77,11 @@ const AllMissingPersonsScreen = ({ navigation}:any) => {
     setModalVisible(true);
   };
 
-  const handleReportFound = () => {
-    if (selectedProfile && currentUser) {
-      firestore()
-        .collection('News')
-        .add({
-          fullName: selectedProfile.fullName,
-          photo: selectedProfile.photo,
-          currentLocation,
-          description,
-          reportedBy: currentUser.displayName || currentUser.email,
-          timestamp: firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-          setModalVisible(false);
-          setCurrentLocation('');
-          setDescription('');
-          console.log('News report added successfully!');
-        })
-        .catch(error => {
-          console.error('Error adding news report:', error);
-        });
-    } else {
-      console.error('No profile selected or user not logged in');
-    }
-  };
-
-  const renderItem = ({ item }: { item: MissingPerson }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: item.photo }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.name}>Name: {item.fullName}</Text>
-        <Text style={styles.details}>Age: {item.age} ({item.gender})</Text>
-        <Text style={styles.details}>Last Seen: {item.lastSeen}</Text>
-        <Text style={styles.details}>Last Seen Location: {item.lastLocation}</Text>
-        <TouchableOpacity style={styles.detailsButton} onPress={() => handleDetailsPress(item)}>
-          <Text style={styles.detailsButtonText}>Details</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          {/* <Icon name="arrow-back" size={24} color="#000" /> */}
-<Image source={require('../../assets/Backspace.png')} />
-
+          <Image source={require('../../assets/Backspace.png')} />
         </TouchableOpacity>
         <Text style={styles.header}>All Missing Persons</Text>
       </View>
@@ -142,7 +94,6 @@ const AllMissingPersonsScreen = ({ navigation}:any) => {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
-        {/* <Icon name="search" size={20} color="#999" style={styles.searchIcon} /> */}
         <Image source={require('../../assets/Search.png')} />
       </View>
 
@@ -166,55 +117,29 @@ const AllMissingPersonsScreen = ({ navigation}:any) => {
       ) : (
         <FlatList
           data={filteredProfiles}
-          renderItem={renderItem}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Image source={{ uri: item.photo }} style={styles.image} />
+              <View style={styles.info}>
+                <Text style={styles.name}>Name: {item.fullName}</Text>
+                <Text style={styles.details}>Age: {item.age} ({item.gender})</Text>
+                <Text style={styles.details}>Last Seen: {item.lastSeen}</Text>
+                <Text style={styles.details}>Last Seen Location: {item.lastLocation}</Text>
+                <TouchableOpacity style={styles.detailsButton} onPress={() => handleDetailsPress(item)}>
+                  <Text style={styles.detailsButtonText}>Details</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
           keyExtractor={item => item.id}
         />
       )}
 
-      {selectedProfile && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>×</Text>
-              </TouchableOpacity>
-              <Image source={{ uri: selectedProfile.photo }} style={styles.modalImage} />
-              <Text style={styles.modalName}>{selectedProfile.fullName}</Text>
-              <Text style={styles.modalDetails}>{selectedProfile.age} Years Old {selectedProfile.gender}</Text>
-              <Text style={styles.modalDetails}>Last Seen Time: {selectedProfile.lastSeen}</Text>
-              <Text style={styles.modalDetails}>Last Seen Location: {selectedProfile.lastLocation}</Text>
-
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Current Location"
-                placeholderTextColor="#999"
-                value={currentLocation}
-                onChangeText={setCurrentLocation}
-              />
-              <TextInput
-                style={[styles.modalInput, { height: 100 }]}
-                placeholder="More Description"
-                placeholderTextColor="#999"
-                multiline={true}
-                value={description}
-                onChangeText={setDescription}
-              />
-
-              <TouchableOpacity style={[styles.modalButton, { backgroundColor: '#5046E5' }]} onPress={handleReportFound}>
-                <Text style={styles.modalButtonText}>Report Found</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, { backgroundColor: '#5046E5' }]} onPress={() => sendEmail('Contact Regarding Missing Person', `Details about ${selectedProfile.fullName}`)}>
-                <Text style={styles.modalButtonText}>Contact Via Email</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      )}
+      <MissingPersonModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        profile={selectedProfile}
+      />
     </View>
   );
 };
@@ -247,9 +172,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
   },
-  searchIcon: {
-    marginLeft: 8,
-  },
   searchInput: {
     flex: 1,
     height: 40,
@@ -263,18 +185,17 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color:'#000000',
+    color: '#000000',
   },
   filterButton: {
     backgroundColor: '#FCFCFD',
     paddingVertical: 8,
     paddingHorizontal: 12,
-  
   },
   filterButtonText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color:'#344054',
+    color: '#344054',
   },
   card: {
     flexDirection: 'row',
@@ -291,22 +212,21 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    
   },
   name: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
-    color:'#000000'
+    color: '#000000',
   },
   details: {
     fontSize: 16,
     marginBottom: 2,
     fontWeight: 'bold',
-     color:'#000000'
+    color: '#000000',
   },
   detailsButton: {
-    width:93,
+    width: 93,
     marginTop: 8,
     backgroundColor: '#5B59FE',
     paddingVertical: 8,
@@ -317,71 +237,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '90%',
-    height: '73%',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 20,
-    alignItems: 'center',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
-  },
-  closeButtonText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  modalImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 16,
-  },
-  modalName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color:'#000000',
-  },
-  modalDetails: {
-    color:'#000000',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  modalInput: {
-    width: '100%',
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  modalButton: {
-    backgroundColor: '#5B59FE',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginTop: 16,
-    width: '100%',
-    alignItems: 'center',
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
   },
 });

@@ -1,54 +1,30 @@
 import {
   View,
-  Alert,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Image,
   ScrollView,
+  StyleSheet,
+  Alert,
 } from 'react-native';
-import React, {useState} from 'react';
-// import {useNavigation} from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-export default function Login(prop:any) {
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-// const Navigation=useNavigation()
-  const onLogin = () => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
+import { useAuth } from '../../hooks/useAuth';
+ // Assuming you have a separate styles file
 
-      .then(response => {
-        Alert.alert('login successfully');
-        // prop.navigation.navigate('MainTabs');
-        console.log('response', response);
-      })
-
-      .catch(error => {
-        console.log('error', error);
-      });
-  };
-
-  GoogleSignin.configure({
-    webClientId:
-      '305312098206-lo6d29tjpa69c5d0deecr69fab489il7.apps.googleusercontent.com',
-  });
-
-  const onGoogleButtonPress = async () => {
-    // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
-  };
+export default function Login() {
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    onLogin,
+    onGoogleButtonPress,
+  } = useAuth();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -69,7 +45,7 @@ export default function Login(prop:any) {
               placeholder="Email"
               keyboardType="email-address"
               value={email}
-              onChangeText={value => setEmail(value)}
+              onChangeText={setEmail}
             />
           </View>
         </View>
@@ -86,7 +62,7 @@ export default function Login(prop:any) {
               placeholder="Password"
               secureTextEntry
               value={password}
-              onChangeText={value => setPassword(value)}
+              onChangeText={setPassword}
             />
           </View>
         </View>
@@ -97,13 +73,15 @@ export default function Login(prop:any) {
 
         <View style={styles.linkContainer}>
           <TouchableOpacity
-            onPress={() => prop.navigation.navigate('ForgotPassword')}>
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
             <Text style={styles.link}>Forget your password</Text>
           </TouchableOpacity>
           <Text style={styles.linkSeparator}>|</Text>
 
           <TouchableOpacity
-            onPress={() => prop.navigation.navigate('Register')}>
+            onPress={() => navigation.navigate('Register')}
+          >
             <Text style={styles.link}>Register for an account</Text>
           </TouchableOpacity>
         </View>
@@ -123,10 +101,10 @@ export default function Login(prop:any) {
           style={styles.bottomImage}
         />
       </View>
-      
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContainer: {
