@@ -1,41 +1,17 @@
-import React, { useEffect, useState } from 'react';
+
+import React from 'react';
 import { View, Text, ImageBackground, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import { useCombinedHook } from '../../hooks/useReportManager'; // Import your custom hook
 import MissingPersonModal from '../../components/profileModal/ProfileModal';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../../navigation/Navigation';
-export default function HomeScreen(prop: any) {
-  const [profiles, setProfiles] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<any>(null);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('Reports')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(
-        querySnapshot => {
-          const profilesData = querySnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              ...data,
-            };
-          });
-          setProfiles(profilesData);
-        },
-        err => {
-          console.error('Error fetching profiles:', err);
-          setError('Error fetching profiles');
-        }
-      );
+import { useAppNavigation } from '../../utils/AppNavigation';
 
-    return () => unsubscribe();
-  }, []);
+export default function HomeScreen() {
+  const { profiles, modalVisible, selectedProfile, openModal, closeModal } = useCombinedHook();
+  const navigation = useAppNavigation();
 
+
+let error:undefined;
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
       {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
@@ -43,6 +19,8 @@ export default function HomeScreen(prop: any) {
       <View style={styles.header}>
         <Text style={styles.logo}>Findr</Text>
         <Text style={styles.subtitle}>Search for hope</Text>
+
+        
         <View style={styles.searchContainer}>
           <TextInput placeholder="Search" style={styles.searchInput} />
           <TouchableOpacity>
@@ -58,9 +36,12 @@ export default function HomeScreen(prop: any) {
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Featured Profiles</Text>
         <TouchableOpacity>
-          <Text style={styles.seeMore}
+          <Text
+            style={styles.seeMore}
             onPress={() => navigation.navigate('FilterReport')}
-          >See More</Text>
+          >
+            See More
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -82,10 +63,7 @@ export default function HomeScreen(prop: any) {
                 </Text>
                 <TouchableOpacity
                   style={styles.detailsButton}
-                  onPress={() => {
-                    setSelectedProfile(profile);
-                    setModalVisible(true);
-                  }}
+                  onPress={() => openModal(profile)}
                 >
                   <Text style={styles.detailsButtonText}>View Details</Text>
                 </TouchableOpacity>
@@ -97,7 +75,7 @@ export default function HomeScreen(prop: any) {
 
       <MissingPersonModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={closeModal}
         profile={selectedProfile}
       />
     </ScrollView>

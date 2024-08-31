@@ -25,18 +25,18 @@ const Register = () => {
     setSelection,
    
    
-    register,
+    onregister,
    
   } = useAuth();
 
-  const onRegister = () => {
-    if (email && password && username) {
-      register();
-    } else {
+  // const onRegister = () => {
+  //   if (email && password && username) {
+  //     register();
+  //   } else {
      
-      Alert.alert('Please fill in all fields');
-    }
-  };
+  //     Alert.alert('Please fill in all fields');
+  //   }
+  // };
 
  
 
@@ -105,7 +105,7 @@ const Register = () => {
           <Text style={styles.helperText}>Save my login details for next time.</Text>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={onRegister}>
+        <TouchableOpacity style={styles.button} onPress={onregister}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
 

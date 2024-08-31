@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+
+
+import React from 'react';
 import { Modal, View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useReportFound } from '../../hooks/useReportFound';
 import { sendEmail } from '../../utils/email';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 
 type MissingPerson = {
   id: string;
@@ -21,36 +22,8 @@ type MissingPersonModalProps = {
 };
 
 const MissingPersonModal: React.FC<MissingPersonModalProps> = ({ visible, onClose, profile }) => {
-  const [currentLocation, setCurrentLocation] = useState('');
-  const [description, setDescription] = useState('');
-
-  const currentUser = auth().currentUser;
-
-  const handleReportFound = () => {
-    if (profile && currentUser) {
-      firestore()
-        .collection('News')
-        .add({
-          fullName: profile.fullName,
-          photo: profile.photo,
-          currentLocation,
-          description,
-          reportedBy: currentUser.displayName || currentUser.email,
-          timestamp: firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-          onClose();
-          setCurrentLocation('');
-          setDescription('');
-          console.log('News report added successfully!');
-        })
-        .catch(error => {
-          console.error('Error adding news report:', error);
-        });
-    } else {
-      console.error('No profile selected or user not logged in');
-    }
-  };
+  const { currentLocation, setCurrentLocation, description, setDescription, handleReportFound } =
+    useReportFound(onClose, profile);
 
   if (!profile) return null;
 
@@ -63,7 +36,9 @@ const MissingPersonModal: React.FC<MissingPersonModalProps> = ({ visible, onClos
           </TouchableOpacity>
           <Image source={{ uri: profile.photo }} style={styles.modalImage} />
           <Text style={styles.modalName}>{profile.fullName}</Text>
-          <Text style={styles.modalDetails}>{profile.age} Years Old {profile.gender}</Text>
+          <Text style={styles.modalDetails}>
+            {profile.age} Years Old {profile.gender}
+          </Text>
           <Text style={styles.modalDetails}>Last Seen Time: {profile.lastSeen}</Text>
           <Text style={styles.modalDetails}>Last Seen Location: {profile.lastLocation}</Text>
 
@@ -86,6 +61,7 @@ const MissingPersonModal: React.FC<MissingPersonModalProps> = ({ visible, onClos
           <TouchableOpacity style={[styles.modalButton, { backgroundColor: '#5046E5' }]} onPress={handleReportFound}>
             <Text style={styles.modalButtonText}>Report Found</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.modalButton, { backgroundColor: '#5046E5' }]}
             onPress={() => sendEmail('Contact Regarding Missing Person', `Details about ${profile.fullName}`)}
@@ -97,6 +73,11 @@ const MissingPersonModal: React.FC<MissingPersonModalProps> = ({ visible, onClos
     </Modal>
   );
 };
+
+
+
+
+
 
 const styles = StyleSheet.create({
   modalContainer: {

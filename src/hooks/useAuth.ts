@@ -127,7 +127,7 @@ export const useAuth = () => {
   };
 
   // Register function
-  const register = () => {
+  const onregister = () => {
     dispatch(registerAsync({ email, password, username }));
   };
 
@@ -162,7 +162,7 @@ export const useAuth = () => {
     loading, // Auth loading state (for both login and registration)
     error, // Auth error state (for both login and registration)
     user,
-    register,
+    onregister,
 
     // Forgot Password
     forgotPasswordLoading,

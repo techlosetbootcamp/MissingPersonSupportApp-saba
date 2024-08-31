@@ -1,81 +1,30 @@
-import React, { useEffect, useState } from 'react';
+
+
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-// import auth from '@react-native-firebase/auth';
+import { useCombinedHook } from '../../hooks/useReportManager';
 import MissingPersonModal from '../../components/profileModal/ProfileModal';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
+const AllMissingPersonsScreen = () => {
 
-type MissingPerson = {
-  id: string;
-  fullName: string;
-  age: number;
-  gender: string;
-  lastSeen: string;
-  lastLocation: string;
-  photo: string;
-};
 
-const AllMissingPersonsScreen = ({ navigation }: any) => {
-  const [profiles, setProfiles] = useState<MissingPerson[]>([]);
-  const [filteredProfiles, setFilteredProfiles] = useState<MissingPerson[]>([]);
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<MissingPerson | null>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  
+  const {
+    profiles, modalVisible, selectedProfile, openModal, closeModal ,
+    filteredProfiles,
+    searchQuery,
+  
+   
+    handleSearchQueryChange,
+    handleGenderChange,
+  } = useCombinedHook();
 
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('Reports')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(
-        querySnapshot => {
-          const profilesData = querySnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              fullName: data.fullName,
-              age: data.age,
-              gender: data.gender,
-              lastSeen: data.lastSeen,
-              lastLocation: data.lastLocation,
-              photo: data.photo,
-            };
-          });
-          setProfiles(profilesData);
-          setFilteredProfiles(profilesData);
-        },
-        err => {
-          console.error('Error fetching profiles:', err);
-          setError('Error fetching profiles');
-        }
-      );
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    let filtered = profiles;
-
-    if (selectedGender) {
-      filtered = filtered.filter(profile => profile.gender.toLowerCase() === selectedGender.toLowerCase());
-    }
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        profile =>
-          profile.fullName.toLowerCase().includes(query) ||
-          profile.lastLocation.toLowerCase().includes(query)
-      );
-    }
-
-    setFilteredProfiles(filtered);
-  }, [selectedGender, searchQuery, profiles]);
-
-  const handleDetailsPress = (profile: MissingPerson) => {
-    setSelectedProfile(profile);
-    setModalVisible(true);
-  };
+  
+let error:undefined;
+ 
 
   return (
     <View style={styles.container}>
@@ -92,26 +41,27 @@ const AllMissingPersonsScreen = ({ navigation }: any) => {
           placeholder="Search by name or location"
           placeholderTextColor="#999"
           value={searchQuery}
-          onChangeText={setSearchQuery}
+          onChangeText={handleSearchQueryChange}
         />
         <Image source={require('../../assets/Search.png')} />
       </View>
 
       <View style={styles.filterContainer}>
         <Text style={styles.filterText}>Filter By: </Text>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedGender('Male')}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleGenderChange('Male')}>
           <Text style={styles.filterButtonText}>Male</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedGender('Female')}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleGenderChange('Female')}>
           <Text style={styles.filterButtonText}>Female</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedGender('Trans')}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleGenderChange('Trans')}>
           <Text style={styles.filterButtonText}>Trans</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedGender(null)}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleGenderChange(null)}>
           <Text style={styles.filterButtonText}>All</Text>
         </TouchableOpacity>
       </View>
+
       {error ? (
         <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>
       ) : (
@@ -125,7 +75,7 @@ const AllMissingPersonsScreen = ({ navigation }: any) => {
                 <Text style={styles.details}>Age: {item.age} ({item.gender})</Text>
                 <Text style={styles.details}>Last Seen: {item.lastSeen}</Text>
                 <Text style={styles.details}>Last Seen Location: {item.lastLocation}</Text>
-                <TouchableOpacity style={styles.detailsButton} onPress={() => handleDetailsPress(item)}>
+                <TouchableOpacity style={styles.detailsButton} onPress={() => openModal(item)}>
                   <Text style={styles.detailsButtonText}>Details</Text>
                 </TouchableOpacity>
               </View>
@@ -137,12 +87,14 @@ const AllMissingPersonsScreen = ({ navigation }: any) => {
 
       <MissingPersonModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        // onClose={() => setModalVisible(false)}
+        onClose={closeModal}
         profile={selectedProfile}
       />
     </View>
   );
 };
+
 
 export default AllMissingPersonsScreen;
 

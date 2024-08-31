@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
 
-const Splash = (props: any) => {
+const Splash = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  
   useEffect(() => {
     setTimeout(() => {
-      props.navigation.navigate('Login');
-    }, 2000);
+      navigation.navigate('Login');
+    }, 1000);
   }, []);
 
   return (

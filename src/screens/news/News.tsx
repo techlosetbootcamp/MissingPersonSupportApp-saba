@@ -1,8 +1,91 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import the Icon component
+// import React, { useEffect, useState } from 'react';
+// import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+// import firestore from '@react-native-firebase/firestore';
 
+
+// type Report = {
+//   id: string;
+//   name: string;
+//   reporter: string;
+//   location: string;
+//   description?: string;
+//   photoUrl: string;
+// };
+
+// const ReportScreen = ({ navigation }: any) => {
+//   const [reports, setReports] = useState<Report[]>([]);
+
+//   useEffect(() => {
+//     const unsubscribe = firestore()
+//       .collection('News')
+//       .orderBy('timestamp', 'desc')
+//       .onSnapshot(
+//         (querySnapshot) => {
+//           const reportList = querySnapshot.docs.map((documentSnapshot) => {
+//             const data = documentSnapshot.data();
+//             return {
+//               id: documentSnapshot.id,
+//               name: data.fullName,
+//               reporter: data.reportedBy,
+//               location: data.currentLocation,
+//               description: data.description,
+//               photoUrl: data.photo,
+//             };
+//           });
+//           setReports(reportList);
+//         },
+//         (error) => {
+//           console.error('Error fetching reports: ', error);
+//         }
+//       );
+
+//     return () => unsubscribe();
+//   }, []);
+
+//   const renderReportItem = ({ item }: { item: Report }) => {
+//     return (
+//       <View style={styles.reportCard}>
+//         <Image source={{ uri: item.photoUrl }} style={styles.reportImage} />
+//         <View style={styles.reportDetails}>
+//           <Text style={styles.reportName}>Name: {item.name}</Text>
+//           <Text style={styles.reportReporter}>Reported by: {item.reporter}</Text>
+//           <Text style={styles.reportLocation}>Location: {item.location}</Text>
+//           {item.description && <Text style={styles.reportDescription}>Description: {item.description}</Text>}
+//           <TouchableOpacity style={styles.contactButton}>
+//             <Text style={styles.contactButtonText}>Contact Person</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     );
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.headerContainer}>
+//         <TouchableOpacity onPress={() => navigation.goBack()}>
+//           <Image source={require('../../assets/Backspace.png')} />
+//         </TouchableOpacity>
+//         <Text style={styles.header}>Reports</Text>
+//       </View>
+//       <FlatList
+//         data={reports}
+//         renderItem={renderReportItem}
+//         keyExtractor={(item) => item.id}
+//         contentContainerStyle={styles.listContainer}
+//       />
+//     </View>
+//   );
+// };
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import useFetchReports from './useNews';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
+
+
+
+// Adjust the import path as needed
 type Report = {
   id: string;
   name: string;
@@ -11,53 +94,25 @@ type Report = {
   description?: string;
   photoUrl: string;
 };
+const ReportScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  
+  const reports = useFetchReports();
 
-const ReportScreen = ({ navigation }: any) => {
-  const [reports, setReports] = useState<Report[]>([]);
-
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('News')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(
-        (querySnapshot) => {
-          const reportList = querySnapshot.docs.map((documentSnapshot) => {
-            const data = documentSnapshot.data();
-            return {
-              id: documentSnapshot.id,
-              name: data.fullName,
-              reporter: data.reportedBy,
-              location: data.currentLocation,
-              description: data.description,
-              photoUrl: data.photo,
-            };
-          });
-          setReports(reportList);
-        },
-        (error) => {
-          console.error('Error fetching reports: ', error);
-        }
-      );
-
-    return () => unsubscribe();
-  }, []);
-
-  const renderReportItem = ({ item }: { item: Report }) => {
-    return (
-      <View style={styles.reportCard}>
-        <Image source={{ uri: item.photoUrl }} style={styles.reportImage} />
-        <View style={styles.reportDetails}>
-          <Text style={styles.reportName}>Name: {item.name}</Text>
-          <Text style={styles.reportReporter}>Reported by: {item.reporter}</Text>
-          <Text style={styles.reportLocation}>Location: {item.location}</Text>
-          {item.description && <Text style={styles.reportDescription}>Description: {item.description}</Text>}
-          <TouchableOpacity style={styles.contactButton}>
-            <Text style={styles.contactButtonText}>Contact Person</Text>
-          </TouchableOpacity>
-        </View>
+  const renderReportItem = ({ item }: { item: Report }) => (
+    <View style={styles.reportCard}>
+      <Image source={{ uri: item.photoUrl }} style={styles.reportImage} />
+      <View style={styles.reportDetails}>
+        <Text style={styles.reportName}>Name: {item.name}</Text>
+        <Text style={styles.reportReporter}>Reported by: {item.reporter}</Text>
+        <Text style={styles.reportLocation}>Location: {item.location}</Text>
+        {item.description && <Text style={styles.reportDescription}>Description: {item.description}</Text>}
+        <TouchableOpacity style={styles.contactButton}>
+          <Text style={styles.contactButtonText}>Contact Person</Text>
+        </TouchableOpacity>
       </View>
-    );
-  };
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -76,6 +131,8 @@ const ReportScreen = ({ navigation }: any) => {
     </View>
   );
 };
+
+export default ReportScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -151,4 +208,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReportScreen;
+

@@ -11,8 +11,12 @@ import {
   Alert,
 } from 'react-native';
 import { useAuth } from '../../hooks/useAuth';
-
-export default function ForgotPassword(prop: any) {
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../../navigation/Navigation';
+export default function ForgotPassword() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  
   const { email, setEmail, sendResetCode} = useAuth();
 
   // React.useEffect(() => {
@@ -31,7 +35,7 @@ export default function ForgotPassword(prop: any) {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => prop.navigation.navigate('Login')}
+            onPress={() =>navigation.goBack()}
           >
             <Image source={require('../../assets/Backspace.png')} />
           </TouchableOpacity>

@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProfileAsync } from '../../redux/slices/profileSlice';
 import { RootState } from '../../redux/store';
 import { useAppDispatch } from '../../hooks/useDispatch';
+import { launchImageLibrary, ImageLibraryOptions, Asset } from 'react-native-image-picker';
+import { Alert } from 'react-native';
+
 export const useProfile = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -27,6 +30,46 @@ export const useProfile = () => {
     }
   };
 
+  const selectImage = () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 300,
+      quality: 1,
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.error('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const selectedAsset: Asset = response.assets[0];
+        setPhoto(selectedAsset.uri || null);
+      }
+    });
+  };
+
+  const handleSave = () => {
+    updateProfile();
+    if (status === 'succeeded') {
+      Alert.alert('Success', 'Profile updated successfully.');
+    } else if (status === 'failed') {
+      Alert.alert('Error', error || 'Failed to update profile.');
+    }
+  };
+
+  const signOut = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        Alert.alert('Signed Out', 'You have been signed out successfully.');
+      })
+      .catch((error) => {
+        Alert.alert('Error', error.message);
+      });
+  };
+
   return {
     name,
     email,
@@ -34,6 +77,9 @@ export const useProfile = () => {
     setName,
     setPhoto,
     updateProfile,
+    selectImage,
+    handleSave,
+    signOut,
     status,
     error,
   };
