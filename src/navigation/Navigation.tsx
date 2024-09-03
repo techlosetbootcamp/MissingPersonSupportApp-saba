@@ -81,7 +81,7 @@ export type RootStackParams ={
   Register:undefined;
   ForgotPassword:undefined;
   News:undefined;
-
+Home:undefined;
 }
 const Stack = createNativeStackNavigator<RootStackParams>();  // Use the defined type
 

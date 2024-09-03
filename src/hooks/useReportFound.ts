@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAppDispatch } from './useDispatch'; // Adjust based on your project structure
 import { addNewsReport } from '../redux/slices/newsSlice';
 import auth from '@react-native-firebase/auth';
+import {useAppNavigation} from '../utils/AppNavigation';
 type MissingPerson = {
     id: string;
     fullName: string;
@@ -17,7 +18,7 @@ export const useReportFound = (onClose: () => void, profile: MissingPerson | nul
   const [description, setDescription] = useState('');
   const dispatch = useAppDispatch();
   const currentUser = auth().currentUser;
-
+  const navigation = useAppNavigation();
   const resetFields = () => {
     setCurrentLocation('');
     setDescription('');
@@ -38,6 +39,7 @@ export const useReportFound = (onClose: () => void, profile: MissingPerson | nul
           onClose();
           resetFields();
           console.log('News report added successfully!');
+          navigation.navigate("News")
         })
         .catch((error) => {
           console.error('Error adding news report:', error);

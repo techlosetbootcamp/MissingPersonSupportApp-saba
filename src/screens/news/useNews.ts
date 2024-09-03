@@ -12,7 +12,7 @@ type Report = {
 
 const useFetchReports = () => {
   const [reports, setReports] = useState<Report[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('News')
@@ -31,16 +31,18 @@ const useFetchReports = () => {
             };
           });
           setReports(reportList);
+          setIsLoading(false);
         },
         (error) => {
           console.error('Error fetching reports: ', error);
+          setIsLoading(false);
         }
       );
 
     return () => unsubscribe();
   }, []);
 
-  return reports;
+  return { reports, isLoading };
 };
 
 export default useFetchReports;

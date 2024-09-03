@@ -7,10 +7,10 @@ import { useAppDispatch } from './useDispatch'; // Adjust the path as needed
 import { RootState } from '../redux/store'; // Adjust the path as needed
 import { updateFormField, submitReport, resetForm } from '../redux/slices/reportFormSlice';
 import { fetchReports, setSearchQuery, setSelectedGender, filterProfiles } from '../redux/slices/filterReportSlice';
-
+import {useAppNavigation} from '../utils/AppNavigation';
 export function useCombinedHook() {
   const dispatch = useAppDispatch();
-
+  const navigation = useAppNavigation();
   // Form state
   const [formData, setFormData] = useState({
     fullName: '',
@@ -65,7 +65,7 @@ export function useCombinedHook() {
     try {
       await dispatch(submitReport(formData)).unwrap();
       Alert.alert('Success', 'Missing person report has been submitted.');
-
+      navigation.navigate('Home')
       dispatch(resetForm());
       setFormData({
         fullName: '',
@@ -87,12 +87,18 @@ export function useCombinedHook() {
   };
 
   // Profiles state
+  const [loading, setLoading] = useState(true); 
   const [profiles, setProfiles] = useState<any[]>([]);
   const [profilesError, setProfilesError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
 
+ 
+
+
+
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = firestore()
       .collection('Reports')
       .orderBy('timestamp', 'desc')
@@ -103,10 +109,12 @@ export function useCombinedHook() {
             ...doc.data(),
           }));
           setProfiles(profilesData);
+          setLoading(false);
         },
         err => {
           console.error('Error fetching profiles:', err);
           setProfilesError('Error fetching profiles');
+          setLoading(false);
         }
       );
 
@@ -163,7 +171,7 @@ export function useCombinedHook() {
     filteredProfiles,
     selectedGender,
     searchQuery,
-   
+    loading,
     handleSearchQueryChange,
     handleGenderChange,
   };

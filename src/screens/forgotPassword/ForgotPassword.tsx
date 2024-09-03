@@ -1,61 +1,48 @@
-
 import React from 'react';
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   Image,
   ScrollView,
-  Alert,
 } from 'react-native';
+import Button from '../../components/button/Button';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../../navigation/Navigation';
+import Header from '../../components/header/Header';
+import {useAppNavigation} from '../../utils/AppNavigation';
+import { FORGOT_PASSWORD } from '../../constants/constants';
+import { IMAGES } from '../../constants/constants';
+import {styles} from "./ForgotPasswordStyles"
 export default function ForgotPassword() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  
-  const { email, setEmail, sendResetCode} = useAuth();
-
-  // React.useEffect(() => {
-  //   if (success) {
-  //     Alert.alert('Reset email sent! Check your inbox.');
-  //   }
-
-  //   if (error) {
-  //     Alert.alert(error);
-  //   }
-  // }, [success, error]);
+  const navigation = useAppNavigation();
+  const { email, setEmail, sendResetCode } = useAuth();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() =>navigation.goBack()}
-          >
-            <Image source={require('../../assets/Backspace.png')} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Forgot Password</Text>
+   
+        <View style={styles.headerWrapper}>
+          <Header
+            title="Forgot Password"
+            onBackPress={() => navigation.goBack()}
+          />
         </View>
 
         <Image
-          source={require('../../assets/ForgotPass.png')}
+          source={IMAGES.forgotPas}
           style={styles.image}
         />
 
         <Text style={styles.instructions}>
-          Please enter the email address associated with your account. We'll
-          send you a verification code to reset your password.
+        {FORGOT_PASSWORD.instructions}
         </Text>
 
+       
         <Text style={styles.label}>Email</Text>
         <View style={styles.inputContainer}>
           <Image
-            source={require('../../assets/Icon.png')}
+            source={IMAGES.icon}
             style={styles.icon}
           />
           <TextInput
@@ -68,90 +55,8 @@ export default function ForgotPassword() {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={sendResetCode} >
-          <Text style={styles.buttonText}>Send Reset Code</Text>
-        </TouchableOpacity>
+        <Button title="Send Reset Code" onPress={sendResetCode} />
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 29,
-    marginBottom: 56,
-  },
-  backButton: {
-    marginRight: 10,
-  },
-
-  title: {
-    fontSize: 23,
-    fontWeight: '600',
-    color: '#000000',
-  },
-  image: {
-    alignSelf: 'center',
-    marginBottom: 34,
-  },
-  instructions: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#222526',
-    marginBottom: 24,
-    paddingHorizontal: 20,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-
-    color: '#121212',
-    fontWeight: '500',
-    alignSelf: 'flex-start',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    marginBottom: 20,
-    width: '80%',
-  },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#111827',
-    height: 44,
-  },
-  button: {
-    width: '80%',
-    height: 52,
-    backgroundColor: '#5B59FE',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FAFAFC',
-    fontSize: 23,
-    fontWeight: '600',
-  },
-});

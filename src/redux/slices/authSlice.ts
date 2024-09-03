@@ -137,6 +137,7 @@ const authSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state, action: PayloadAction<AuthState['user']>) => {
         state.loading = false;
         state.user = action.payload;
+        ToastAndroid.show('Login successful!', ToastAndroid.LONG);
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.loading = false;
@@ -151,6 +152,7 @@ const authSlice = createSlice({
       .addCase(googleLoginAsync.fulfilled, (state, action: PayloadAction<AuthState['user']>) => {
         state.loading = false;
         state.user = action.payload;
+        ToastAndroid.show('Google login successful!', ToastAndroid.LONG);
       })
       .addCase(googleLoginAsync.rejected, (state, action) => {
         state.loading = false;
@@ -165,6 +167,7 @@ const authSlice = createSlice({
       .addCase(registerAsync.fulfilled, (state, action: PayloadAction<AuthState['user']>) => {
         state.loading = false;
         state.user = action.payload;
+        ToastAndroid.show('Registration successful!', ToastAndroid.LONG);
       })
       .addCase(registerAsync.rejected, (state, action) => {
         state.loading = false;
@@ -180,6 +183,7 @@ const authSlice = createSlice({
       .addCase(forgotPasswordAsync.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
+        ToastAndroid.show('Reset email sent! Check your inbox.', ToastAndroid.LONG);
       })
       .addCase(forgotPasswordAsync.rejected, (state, action) => {
         state.loading = false;

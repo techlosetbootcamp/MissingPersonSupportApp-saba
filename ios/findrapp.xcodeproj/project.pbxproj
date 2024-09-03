@@ -14,6 +14,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-findrapp-findrappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-findrapp-findrappTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		44A4FFC8C8AF473ABEE3B6A3 /* Familjen Grotesk.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1A52EBB83594CF797F8AFC3 /* Familjen Grotesk.ttf */; };
+		37C755C1496D494EA60B6F7B /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B36B02115AF2461B9A8722C0 /* Montserrat.ttf */; };
+		181B32EFD73144A494F5F778 /* Satisfy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2412430F1C4344D6B2F78FDE /* Satisfy.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +48,9 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = findrapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-findrapp-findrappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-findrapp-findrappTests.release.xcconfig"; path = "Target Support Files/Pods-findrapp-findrappTests/Pods-findrapp-findrappTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		E1A52EBB83594CF797F8AFC3 /* Familjen Grotesk.ttf */ = {isa = PBXFileReference; name = "Familjen Grotesk.ttf"; path = "../src/assets/fonts/Familjen Grotesk.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B36B02115AF2461B9A8722C0 /* Montserrat.ttf */ = {isa = PBXFileReference; name = "Montserrat.ttf"; path = "../src/assets/fonts/Montserrat.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2412430F1C4344D6B2F78FDE /* Satisfy.ttf */ = {isa = PBXFileReference; name = "Satisfy.ttf"; path = "../src/assets/fonts/Satisfy.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +130,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				5C85AC5493EF4F96AAD183E3 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -149,6 +156,17 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		5C85AC5493EF4F96AAD183E3 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				E1A52EBB83594CF797F8AFC3 /* Familjen Grotesk.ttf */,
+				B36B02115AF2461B9A8722C0 /* Montserrat.ttf */,
+				2412430F1C4344D6B2F78FDE /* Satisfy.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -245,6 +263,9 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				44A4FFC8C8AF473ABEE3B6A3 /* Familjen Grotesk.ttf in Resources */,
+				37C755C1496D494EA60B6F7B /* Montserrat.ttf in Resources */,
+				181B32EFD73144A494F5F778 /* Satisfy.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import { Modal, View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, Image, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useReportFound } from '../../hooks/useReportFound';
 import { sendEmail } from '../../utils/email';
 
@@ -29,55 +27,62 @@ const MissingPersonModal: React.FC<MissingPersonModalProps> = ({ visible, onClos
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-      <View style={styles.modalContainer}>
+      <KeyboardAvoidingView
+        style={styles.modalContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
         <View style={styles.modalContent}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>×</Text>
           </TouchableOpacity>
           <Image source={{ uri: profile.photo }} style={styles.modalImage} />
-          <Text style={styles.modalName}>{profile.fullName}</Text>
+          <Text style={styles.modalDetails}>{profile.fullName}</Text>
           <Text style={styles.modalDetails}>
             {profile.age} Years Old {profile.gender}
           </Text>
           <Text style={styles.modalDetails}>Last Seen Time: {profile.lastSeen}</Text>
           <Text style={styles.modalDetails}>Last Seen Location: {profile.lastLocation}</Text>
 
-          <TextInput
-            style={styles.modalInput}
-            placeholder="Current Location"
-            placeholderTextColor="#999"
-            value={currentLocation}
-            onChangeText={setCurrentLocation}
-          />
-          <TextInput
-            style={[styles.modalInput, { height: 100 }]}
-            placeholder="More Description"
-            placeholderTextColor="#999"
-            multiline={true}
-            value={description}
-            onChangeText={setDescription}
-          />
+          <ScrollView style={{width: '100%'}}>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Location"
+              placeholderTextColor="#0F0F0F"
+              value={currentLocation}
+              onChangeText={setCurrentLocation}
+            />
+            <TextInput
+              style={[styles.modalInput, { height: 100 }]}
+              placeholder="More Description"
+              placeholderTextColor="#0F0F0F"
+              multiline={true}
+              value={description}
+              onChangeText={setDescription}
+            />
+<View      style={styles.buttonAlign}>
 
-          <TouchableOpacity style={[styles.modalButton, { backgroundColor: '#5046E5' }]} onPress={handleReportFound}>
-            <Text style={styles.modalButtonText}>Report Found</Text>
-          </TouchableOpacity>
+<TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => sendEmail('Contact Regarding Missing Person', `Details about ${profile.fullName}`)}
+            >
+              <Text style={styles.modalButtonText}>Contact Via Email</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.modalButton, { backgroundColor: '#5046E5' }]}
-            onPress={() => sendEmail('Contact Regarding Missing Person', `Details about ${profile.fullName}`)}
-          >
-            <Text style={styles.modalButtonText}>Contact Via Email</Text>
-          </TouchableOpacity>
+            <TouchableOpacity  style={[styles.modalButton, { backgroundColor: '#5046E5' }]} onPress={handleReportFound}>
+              <Text style={styles.modalButtonReport}>Report Found</Text>
+            </TouchableOpacity>
+
+            </View>
+
+         
+
+
+          </ScrollView>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
-
-
-
-
-
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -110,23 +115,24 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 16,
   },
-  modalName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#000000',
-  },
+  // modalName: {
+  //   fontSize: 16,
+  //   fontWeight: 'bold',
+  //   marginBottom: 4,
+  //   color: '#000000',
+  // },
   modalDetails: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '400',
     marginBottom: 4,
     textAlign: 'center',
     color: '#000000',
+    fontFamily:'Familjen Grotesk',
   },
   modalInput: {
     width: '100%',
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#000000',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -134,18 +140,32 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   modalButton: {
-    backgroundColor: '#5B59FE',
+    backgroundColor: '#FFFFFF',
+    
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 8,
     marginTop: 16,
     width: '100%',
     alignItems: 'center',
+    borderWidth:1,
+    borderColor:'#5B59FE',
   },
   modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: '#5B59FE',
+    fontWeight: '500',
+    fontFamily:'Montserrat',
   },
+  modalButtonReport: {
+    color: '#FFFFFF',
+    fontWeight: '500',
+    fontFamily:'Montserrat',
+  },
+  buttonAlign:{
+   marginTop:'20%',
+   
+  }
+
 });
 
 export default MissingPersonModal;

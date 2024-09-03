@@ -6,12 +6,12 @@ import ReportFormScreen from '../screens/reportForm/ReportForm';
 import ProfileScreen from '../screens/profile/Profile';
 import { Image, View, StyleSheet, Text } from 'react-native';
 import News from '../screens/news/News';
-
-const homeIcon = require('../assets/Home.png');
-const reportsIcon = require('../assets/Report.png');
-const uploadIcon = require('../assets/Upload.png');
-const profileIcon = require('../assets/Profile.png');
-const NewsIcon = require('../assets/News.png');
+import {IMAGES} from "../constants/constants"
+const homeIcon = IMAGES.home;
+const reportsIcon = IMAGES.report;
+const uploadIcon = IMAGES.upload;
+const profileIcon = IMAGES.profile;
+const NewsIcon = IMAGES.news;
 
 const Tab = createBottomTabNavigator();
 
