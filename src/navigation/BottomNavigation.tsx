@@ -1,17 +1,22 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/Home';
-import FilterReportScreen from '../screens/filterReport/FilterReport';
-import ReportFormScreen from '../screens/reportForm/ReportForm';
-import ProfileScreen from '../screens/profile/Profile';
-import { Image, View, StyleSheet, Text } from 'react-native';
-import News from '../screens/news/News';
-import {IMAGES} from "../constants/constants"
-const homeIcon = IMAGES.home;
-const reportsIcon = IMAGES.report;
-const uploadIcon = IMAGES.upload;
-const profileIcon = IMAGES.profile;
-const NewsIcon = IMAGES.news;
+import { colors } from '../constants/colors';
+import {
+  ReportForm,
+  FilterReport,
+  ProfileScreen,
+  News,
+} from '../constants/constants';
+
+import {Image, View, StyleSheet, Text} from 'react-native';
+
+import {IMAGES} from '../constants/constants';
+const homeIcon = IMAGES?.home;
+const reportsIcon = IMAGES?.report;
+const uploadIcon = IMAGES?.upload;
+const profileIcon = IMAGES?.profile;
+const NewsIcon = IMAGES?.news;
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +24,7 @@ function BottomNavigation() {
   return (
     <View style={styles.container}>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
+        screenOptions={({route}) => ({
           tabBarIcon: () => {
             let iconSource;
 
@@ -41,23 +46,28 @@ function BottomNavigation() {
               </View>
             );
           },
-          tabBarLabel: ({ focused }) => {
+          tabBarLabel: ({focused}) => {
             return (
-              <Text style={[styles.tabBarLabel, { color: focused ? 'blue' : 'black' }]}>
+              <Text
+                style={[
+                  styles.tabBarLabel,
+                  {color: focused ? 'blue' : 'black'},
+                ]}>
                 {route.name}
               </Text>
             );
           },
           tabBarStyle: [
             styles.tabBarStyle,
-            (route.name === 'Profile' || route.name === 'Upload') && { display: 'none' }, // Hide tab bar on specific screens
+            (route.name === 'Profile' || route.name === 'Upload') && {
+              display: 'none',
+            },
           ],
           headerShown: false,
-        })}
-      >
+        })}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Reports" component={FilterReportScreen} />
-        <Tab.Screen name="Upload" component={ReportFormScreen} />
+        <Tab.Screen name="Reports" component={FilterReport} />
+        <Tab.Screen name="Upload" component={ReportForm} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="News" component={News} />
       </Tab.Navigator>
@@ -67,9 +77,8 @@ function BottomNavigation() {
 
 const styles = StyleSheet.create({
   container: {
-  
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.whitish,
   },
   tabBarStyle: {
     paddingBottom: 8,
@@ -79,14 +88,15 @@ const styles = StyleSheet.create({
     height: 62,
     margin: '10%',
     marginTop: 17,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.whitish,
     borderRadius: 42,
     borderWidth: 2,
-    borderColor: '#000000',
+    borderTopWidth: 2,
+    borderColor: colors.charcoal,
   },
   tabBarLabel: {
     fontSize: 12,
-    color: 'black',
+    color: colors.charcoal,
     fontWeight: 400,
   },
 });

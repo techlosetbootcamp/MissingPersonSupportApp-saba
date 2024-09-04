@@ -1,28 +1,47 @@
-// src/constants/reportFields.ts
-
-import { FieldProps, FormData, HandleInputChange } from '../types/types';
-// import { FormData, HandleInputChange } from '../types/formDataTypes';
+import {FieldProps, FormData, HandleInputChange} from '../types/types';
 
 export const getPhysicalDescriptionFields = (
   formData: FormData,
-  handleInputChange: HandleInputChange
+  handleInputChange: HandleInputChange,
 ): FieldProps[] => [
-  { label: 'Height', value: formData.height, placeholder: 'Height', onChange: text => handleInputChange('height', text) },
-  { label: 'Weight', value: formData.weight, placeholder: 'Weight', onChange: text => handleInputChange('weight', text) },
-  { label: 'Eye Color', value: formData.eyeColor, placeholder: 'Eye Color', onChange: text => handleInputChange('eyeColor', text) },
-  { label: 'Hair Color', value: formData.hairColor, placeholder: 'Hair Color', onChange: text => handleInputChange('hairColor', text) },
-  { label: 'Length of the Hair', value: formData.hairLength, placeholder: 'Length of the Hair', onChange: text => handleInputChange('hairLength', text) },
+  {
+    label: 'Height',
+    value: formData.height,
+    placeholder: 'Height',
+    onChange: text => handleInputChange('height', text),
+  },
+  {
+    label: 'Weight',
+    value: formData.weight,
+    placeholder: 'Weight',
+    onChange: text => handleInputChange('weight', text),
+  },
+  {
+    label: 'Eye Color',
+    value: formData.eyeColor,
+    placeholder: 'Eye Color',
+    onChange: text => handleInputChange('eyeColor', text),
+  },
+  {
+    label: 'Hair Color',
+    value: formData.hairColor,
+    placeholder: 'Hair Color',
+    onChange: text => handleInputChange('hairColor', text),
+  },
+  {
+    label: 'Length of the Hair',
+    value: formData.hairLength,
+    placeholder: 'Length of the Hair',
+    onChange: text => handleInputChange('hairLength', text),
+  },
 ];
 
-
 export const FORGOT_PASSWORD = {
- 
   instructions:
     "Please enter the email address associated with your account. We'll send you a verification code to reset your password.",
-
 };
 
-import { KeyboardTypeOptions } from 'react-native';
+import {KeyboardTypeOptions} from 'react-native';
 
 interface InputConfig {
   label: string;
@@ -40,7 +59,7 @@ export const getInputs = (
   email: string,
   setEmail: (text: string) => void,
   password: string,
-  setPassword: (text: string) => void
+  setPassword: (text: string) => void,
 ): InputConfig[] => [
   {
     label: 'Name',
@@ -71,8 +90,6 @@ export const getInputs = (
   },
 ];
 
-
-
 export type InputField = {
   label: string;
   placeholder: string;
@@ -81,15 +98,14 @@ export type InputField = {
   keyboardType: KeyboardTypeOptions;
   secureTextEntry: boolean;
   icon?: any;
-  infoText?: string; 
+  infoText?: string;
 };
 
-// You can now use this file to export the `inputs` array as a function
 export const getInputConfig = (
   email: string,
   setEmail: (text: string) => void,
   password: string,
-  setPassword: (text: string) => void
+  setPassword: (text: string) => void,
 ): InputField[] => [
   {
     label: 'Email',
@@ -111,15 +127,7 @@ export const getInputConfig = (
   },
 ];
 
-// import back from "../assets/images/Backspace.png"
-// import banner from "../assets/images/Banner.png"
-
-
-// const IMAGES = {back,banner}
-// export default IMAGES;
-
 export const IMAGES = {
- 
   back: require('../assets/images/Backspace.png'),
   banner: require('../assets/images/Banner.png'),
   calender: require('../assets/images/Calender.png'),
@@ -140,6 +148,25 @@ export const IMAGES = {
   uploadIcon: require('../assets/images/UploadIcon.png'),
   user: require('../assets/images/User.png'),
   edit: require('../assets/images/Edit.png'),
+};
 
+import Register from '../screens/register/Register';
+import Login from '../screens/login/Login';
+import ForgotPassword from '../screens/forgotPassword/ForgotPassword';
+import Splash from '../screens/splash/Splash';
 
+import ReportForm from '../screens/reportForm/ReportForm';
+import FilterReport from '../screens/filterReport/FilterReport';
+import ProfileScreen from '../screens/profile/Profile';
+import News from '../screens/news/News';
+
+export {
+  Register,
+  Login,
+  ForgotPassword,
+  Splash,
+  ReportForm,
+  FilterReport,
+  ProfileScreen,
+  News,
 };

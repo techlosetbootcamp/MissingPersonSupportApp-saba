@@ -1,15 +1,14 @@
 import {StyleSheet} from 'react-native';
 import {colors} from '../../constants/colors';
 export const styles = StyleSheet.create({
-  headerContainer: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 30,
+    borderColor: colors.lightGray,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
-  header: {
-    fontSize: 23,
-    fontWeight: 'bold',
-    marginLeft: 19,
-    color: colors.charcoal,
-  },
+  searchInput: {flex: 1, height: 40},
 });

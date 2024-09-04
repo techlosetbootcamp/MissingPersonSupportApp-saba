@@ -1,14 +1,6 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-
-type Report = {
-  id: string;
-  name: string;
-  reporter: string;
-  location: string;
-  description?: string;
-  photoUrl: string;
-};
+import {Report} from '../../types/types';
 
 const useFetchReports = () => {
   const [reports, setReports] = useState<Report[]>([]);
@@ -18,31 +10,30 @@ const useFetchReports = () => {
       .collection('News')
       .orderBy('timestamp', 'desc')
       .onSnapshot(
-        (querySnapshot) => {
-          const reportList = querySnapshot.docs.map((documentSnapshot) => {
+        querySnapshot => {
+          const reportList = querySnapshot.docs.map(documentSnapshot => {
             const data = documentSnapshot.data();
             return {
-              id: documentSnapshot.id,
-              name: data.fullName,
-              reporter: data.reportedBy,
-              location: data.currentLocation,
-              description: data.description,
-              photoUrl: data.photo,
+              id: documentSnapshot?.id,
+              name: data?.fullName,
+              reporter: data?.reportedBy,
+              location: data?.currentLocation,
+              description: data?.description,
+              photoUrl: data?.photo,
             };
           });
           setReports(reportList);
           setIsLoading(false);
         },
-        (error) => {
-          console.error('Error fetching reports: ', error);
+        error => {
           setIsLoading(false);
-        }
+        },
       );
 
     return () => unsubscribe();
   }, []);
 
-  return { reports, isLoading };
+  return {reports, isLoading};
 };
 
 export default useFetchReports;

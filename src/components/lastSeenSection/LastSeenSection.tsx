@@ -1,17 +1,8 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import {View, Text, TextInput, Button} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {styles} from "./LastSeenSectionStyles"
-interface LastSeenSectionProps {
-  lastLocation: string;
-  lastSeen: string;
-  showPicker: boolean;
-  date: Date;
-  handleInputChange: (field: "fullName" | "gender" | "nickname" | "height" | "weight" | "eyeColor" | "hairColor" | "hairLength" | "lastSeen" | "lastLocation" | "dateOfBirth" | "photo", value: string) => void;
- 
-  setShowPicker: (value: boolean) => void;
-  setDate: (date: Date) => void;
-}
+import {styles} from './LastSeenSectionStyles';
+import {LastSeenSectionProps} from '../../types/types';
 
 const LastSeenSection: React.FC<LastSeenSectionProps> = ({
   lastLocation,
@@ -65,7 +56,5 @@ const LastSeenSection: React.FC<LastSeenSectionProps> = ({
     </View>
   );
 };
-
-
 
 export default LastSeenSection;

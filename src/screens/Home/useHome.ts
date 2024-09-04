@@ -1,8 +1,15 @@
-import { useState, useMemo } from 'react';
-import { useCombinedHook } from '../../hooks/useReportManager'; // Adjust the import path as needed
+import {useState, useMemo} from 'react';
+import {useCombinedHook} from '../../hooks/useReportManager';
 
 export const useHomeScreenManager = () => {
-  const { profiles, modalVisible, selectedProfile, openModal, closeModal,loading } = useCombinedHook();
+  const {
+    profiles,
+    modalVisible,
+    selectedProfile,
+    openModal,
+    closeModal,
+    loading,
+  } = useCombinedHook();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchQueryChange = (query: string) => {
@@ -10,9 +17,12 @@ export const useHomeScreenManager = () => {
   };
 
   const filteredProfiles = useMemo(() => {
-    return profiles.filter(profile =>
-      profile.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      profile.lastLocation.toLowerCase().includes(searchQuery.toLowerCase())
+    return profiles.filter(
+      profile =>
+        profile?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        profile?.lastLocation
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()),
     );
   }, [profiles, searchQuery]);
 
@@ -24,6 +34,6 @@ export const useHomeScreenManager = () => {
     selectedProfile,
     openModal,
     closeModal,
-    loading
+    loading,
   };
 };

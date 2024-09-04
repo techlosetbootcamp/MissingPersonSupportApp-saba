@@ -1,32 +1,26 @@
-// BasicDetailsSection.tsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React from 'react';
+import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {IMAGES} from '../../constants/constants';
-import {styles} from "./BasicDetailsFormStyles"
-import DatePicker from 'react-native-date-picker';
-interface BasicDetailsSectionProps {
-  formData: any;
-  handleInputChange: (field: "fullName" | "gender" | "nickname" | "height" | "weight" | "eyeColor" | "hairColor" | "hairLength" | "lastSeen" | "lastLocation" | "dateOfBirth" | "photo", value: string) => void;
- 
-  showDatePicker: boolean;
-  setShowDatePicker: (value: boolean) => void;
-  handleDateChange: (event: any, selectedDate?: Date) => void;
-}
+import {styles} from './BasicDetailsFormStyles';
+import {useBasicDetails} from './useBasicDetailsForm';
+import {BasicDetailsSectionProps} from '../../types/types';
 
 const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
   formData,
-  handleInputChange,
-  showDatePicker,
-  setShowDatePicker,
-  handleDateChange,
- 
 }) => {
-  const [genderDropdownVisible, setGenderDropdownVisible] = useState(false);
+  const {
+    genderDropdownVisible,
+    setGenderDropdownVisible,
+    showDatePicker,
+    setShowDatePicker,
+    handleInputChange,
+    handleDateChange,
+  } = useBasicDetails(formData);
+
   const dateOfBirthDate = new Date(formData.dateOfBirth);
 
   return (
-    <>
     <View>
       <Text style={styles.label}>Missing Person's Full Name</Text>
       <TextInput
@@ -39,15 +33,11 @@ const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
       <Text style={styles.label}>Gender</Text>
       <TouchableOpacity
         style={styles.dropdown}
-        onPress={() => setGenderDropdownVisible(!genderDropdownVisible)}
-      >
+        onPress={() => setGenderDropdownVisible(!genderDropdownVisible)}>
         <Text style={styles.dropdownText}>
           {formData.gender || 'Select Gender'}
         </Text>
-        <Image
-          source={IMAGES.down}
-          style={styles.dropdownIcon}
-        />
+        <Image source={IMAGES.down} style={styles.dropdownIcon} />
       </TouchableOpacity>
       {genderDropdownVisible && (
         <View style={styles.dropdownOptions}>
@@ -58,8 +48,7 @@ const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
               onPress={() => {
                 handleInputChange('gender', gender);
                 setGenderDropdownVisible(false);
-              }}
-            >
+              }}>
               <Text style={styles.dropdownOptionText}>{gender}</Text>
             </TouchableOpacity>
           ))}
@@ -69,13 +58,9 @@ const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
       <Text style={styles.label}>Date of Birth</Text>
       <TouchableOpacity
         onPress={() => setShowDatePicker(true)}
-        style={styles.dateInput}
-      >
+        style={styles.dateInput}>
         <Text>{dateOfBirthDate.toLocaleDateString() || 'Select Date'}</Text>
-        <Image
-          style={styles.icon}
-          source={IMAGES.calender}
-        />
+        <Image style={styles.icon} source={IMAGES.calender} />
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
@@ -86,7 +71,7 @@ const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
         />
       )}
 
-      <Text style={styles.label}>Nickname or Known aliases</Text>
+      <Text style={styles.label}>Nickname or Known Aliases</Text>
       <TextInput
         value={formData.nickname}
         onChangeText={text => handleInputChange('nickname', text)}
@@ -94,13 +79,7 @@ const BasicDetailsSection: React.FC<BasicDetailsSectionProps> = ({
         style={styles.input}
       />
     </View>
-
-
-</>
-
-
   );
 };
-
 
 export default BasicDetailsSection;

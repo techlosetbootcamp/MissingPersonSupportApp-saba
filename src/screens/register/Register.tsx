@@ -1,21 +1,20 @@
-
 import React from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   SafeAreaView,
   ScrollView,
   Image,
 } from 'react-native';
 import CheckBox from 'react-native-check-box';
-import { useAuth } from '../../hooks/useAuth';
+import {useAuth} from '../../hooks/useAuth';
 import Button from '../../components/button/Button';
-import { getInputs } from '../../constants/constants';
-import { IMAGES } from '../../constants/constants';
-import {styles } from "./RegisterStyle"
+import {getInputs} from '../../constants/constants';
+import {IMAGES} from '../../constants/constants';
+import {styles} from './RegisterStyle';
+import {colors} from '../../constants/colors';
 const Register = () => {
   const {
     email,
@@ -29,7 +28,14 @@ const Register = () => {
     onregister,
   } = useAuth();
 
-  const inputs = getInputs(username, setUsername, email, setEmail, password, setPassword);
+  const inputs = getInputs(
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,21 +48,36 @@ const Register = () => {
         <Text style={styles.logoText}>Findr</Text>
         <Text style={styles.subtitle}>Join the Search for Hope</Text>
 
-        {inputs.map(({ label, placeholder, value, onChangeText, secureTextEntry, helperText, keyboardType }, index) => (
-          <View key={index} style={styles.inputContainer}>
-            <Text style={styles.label}>{label}</Text>
-            <TextInput
-              style={[styles.input, { color: '#101828', fontSize: 16, fontWeight: '400' }]}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              placeholderTextColor="#888"
-            />
-            {helperText && <Text style={styles.helperText}>{helperText}</Text>}
-          </View>
-        ))}
+        {inputs.map(
+          (
+            {
+              label,
+              placeholder,
+              value,
+              onChangeText,
+              secureTextEntry,
+              helperText,
+              keyboardType,
+            },
+            index,
+          ) => (
+            <View key={index} style={styles.inputContainer}>
+              <Text style={styles.label}>{label}</Text>
+              <TextInput
+                style={styles.input}
+                placeholder={placeholder}
+                value={value}
+                onChangeText={onChangeText}
+                secureTextEntry={secureTextEntry}
+                keyboardType={keyboardType}
+                placeholderTextColor={colors.charcoal}
+              />
+              {helperText && (
+                <Text style={styles.helperText}>{helperText}</Text>
+              )}
+            </View>
+          ),
+        )}
 
         <View style={styles.checkboxContainer}>
           <CheckBox
@@ -68,7 +89,9 @@ const Register = () => {
         </View>
 
         <View style={styles.leftAlignedContainer}>
-          <Text style={styles.helperText}>Save my login details for next time.</Text>
+          <Text style={styles.helperText}>
+            Save my login details for next time.
+          </Text>
         </View>
 
         <Button title="Next" onPress={onregister} />
@@ -80,6 +103,5 @@ const Register = () => {
     </SafeAreaView>
   );
 };
-
 
 export default Register;

@@ -1,22 +1,21 @@
-
-
-import { StyleSheet } from "react-native";
+import {StyleSheet} from 'react-native';
+import {colors} from '../../constants/colors';
 export const styles = StyleSheet.create({
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 10,
-        gap: 10,
-      },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+    gap: 10,
+  },
   label: {
-    color: '#000000',
+    color: colors.charcoal,
     fontWeight: '500',
     fontSize: 14,
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.slateGray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
@@ -24,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.slateGray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
@@ -34,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: 16,
-    color: '#000',
+    color: colors.charcoal,
   },
   dropdownIcon: {
     width: 20,
@@ -42,7 +41,7 @@ export const styles = StyleSheet.create({
   },
   dropdownOptions: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.lightGray,
     borderRadius: 5,
     marginBottom: 15,
   },
@@ -51,14 +50,14 @@ export const styles = StyleSheet.create({
   },
   dropdownOptionText: {
     fontSize: 16,
-    color: '#000',
+    color: colors.charcoal,
   },
   dateInput: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.lightGray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   Image,
   ScrollView,
 } from 'react-native';
@@ -14,6 +13,7 @@ import {useAppNavigation} from '../../utils/AppNavigation';
 import { FORGOT_PASSWORD } from '../../constants/constants';
 import { IMAGES } from '../../constants/constants';
 import {styles} from "./ForgotPasswordStyles"
+import { colors } from "../../constants/colors";
 export default function ForgotPassword() {
   const navigation = useAppNavigation();
   const { email, setEmail, sendResetCode } = useAuth();
@@ -48,7 +48,7 @@ export default function ForgotPassword() {
           <TextInput
             style={styles.input}
             placeholder="Email"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor={colors.charcoal}
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}

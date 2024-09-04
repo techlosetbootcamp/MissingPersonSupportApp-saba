@@ -1,32 +1,36 @@
-import { useState, useEffect } from 'react';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateProfileAsync } from '../../redux/slices/profileSlice';
-import { RootState } from '../../redux/store';
-import { useAppDispatch } from '../../hooks/useDispatch';
-import { launchImageLibrary, ImageLibraryOptions, Asset } from 'react-native-image-picker';
-import { Alert } from 'react-native';
-
+import {useState, useEffect} from 'react';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {useSelector} from 'react-redux';
+import {updateProfileAsync} from '../../redux/slices/profileSlice';
+import {RootState} from '../../redux/store';
+import {useAppDispatch} from '../../hooks/useDispatch';
+import {
+  launchImageLibrary,
+  ImageLibraryOptions,
+  Asset,
+} from 'react-native-image-picker';
+import {Alert} from 'react-native';
+import {ToastAndroid} from 'react-native';
 export const useProfile = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [photo, setPhoto] = useState<string | null>(null);
 
-  const user: FirebaseAuthTypes.User | null = auth().currentUser;
+  const user: FirebaseAuthTypes.User | null = auth()?.currentUser;
   const dispatch = useAppDispatch();
-  const { status, error } = useSelector((state: RootState) => state.profile);
+  const {status, error} = useSelector((state: RootState) => state.profile);
 
   useEffect(() => {
     if (user) {
-      setName(user.displayName || '');
-      setEmail(user.email || '');
-      setPhoto(user.photoURL);
+      setName(user?.displayName || '');
+      setEmail(user?.email || '');
+      setPhoto(user?.photoURL);
     }
   }, [user]);
 
   const updateProfile = () => {
     if (user) {
-      dispatch(updateProfileAsync({ name, photo }));
+      dispatch(updateProfileAsync({name, photo}));
     }
   };
 
@@ -39,12 +43,12 @@ export const useProfile = () => {
     };
 
     launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.error('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        const selectedAsset: Asset = response.assets[0];
+      if (response?.didCancel) {
+        ToastAndroid.show('cancelled image picker', ToastAndroid.LONG);
+      } else if (response?.errorCode) {
+        ToastAndroid.show('ImagePicker Error ', ToastAndroid.LONG);
+      } else if (response?.assets && response?.assets.length > 0) {
+        const selectedAsset: Asset = response?.assets[0];
         setPhoto(selectedAsset.uri || null);
       }
     });
@@ -53,9 +57,9 @@ export const useProfile = () => {
   const handleSave = () => {
     updateProfile();
     if (status === 'succeeded') {
-      Alert.alert('Success', 'Profile updated successfully.');
+      ToastAndroid.show('Profile updated successfully. ', ToastAndroid.LONG);
     } else if (status === 'failed') {
-      Alert.alert('Error', error || 'Failed to update profile.');
+      ToastAndroid.show('Failed to update profile. ', ToastAndroid.LONG);
     }
   };
 
@@ -63,10 +67,13 @@ export const useProfile = () => {
     auth()
       .signOut()
       .then(() => {
-        Alert.alert('Signed Out', 'You have been signed out successfully.');
+        ToastAndroid.show(
+          'You have been signed out successfully.',
+          ToastAndroid.LONG,
+        );
       })
-      .catch((error) => {
-        Alert.alert('Error', error.message);
+      .catch(error => {
+        Alert.alert('Error', error?.message);
       });
   };
 

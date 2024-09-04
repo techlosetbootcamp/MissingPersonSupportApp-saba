@@ -1,21 +1,34 @@
-import { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {useState, useEffect} from 'react';
+import {Alert} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from './useDispatch'; // Adjust the path as needed
-import { RootState } from '../redux/store'; // Adjust the path as needed
-import { updateFormField, submitReport, resetForm } from '../redux/slices/reportFormSlice';
-import { fetchReports, setSearchQuery, setSelectedGender, filterProfiles } from '../redux/slices/filterReportSlice';
+import {useSelector} from 'react-redux';
+import {useAppDispatch} from './useDispatch';
+import {RootState} from '../redux/store';
+import {
+  updateFormField,
+  submitReport,
+  resetForm,
+} from '../redux/slices/reportFormSlice';
+import {
+  fetchReports,
+  setSearchQuery,
+  setSelectedGender,
+  filterProfiles,
+} from '../redux/slices/filterReportSlice';
 import {useAppNavigation} from '../utils/AppNavigation';
+import {ToastAndroid} from 'react-native';
+import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import {Profile} from '../types/types';
+
 export function useCombinedHook() {
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
-  // Form state
+
   const [formData, setFormData] = useState({
     fullName: '',
     gender: '',
-    dateOfBirth: new Date().toISOString(), // Store date as string
+    dateOfBirth: new Date().toISOString(),
     nickname: '',
     height: '',
     weight: '',
@@ -31,15 +44,21 @@ export function useCombinedHook() {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  const handleInputChange = (key: keyof typeof formData, value: any) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
-    dispatch(updateFormField({ key, value }));
+  const handleInputChange = (
+    key: keyof typeof formData,
+    value: string | Date | number | null,
+  ) => {
+    setFormData(prev => ({...prev, [key]: value}));
+    dispatch(updateFormField({key, value}));
   };
 
-  const handleDateChange = (event: any, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || new Date(formData.dateOfBirth);
+  const handleDateChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined,
+  ) => {
+    const currentDate = selectedDate || new Date(formData?.dateOfBirth);
     const isoString = currentDate.toISOString();
-    handleInputChange('dateOfBirth', isoString); // Store as ISO string
+    handleInputChange('dateOfBirth', isoString);
     setShowDatePicker(false);
   };
 
@@ -55,17 +74,47 @@ export function useCombinedHook() {
   };
 
   const submitReportForm = async () => {
-    const { fullName, gender, dateOfBirth, lastSeen, lastLocation, height, weight, eyeColor, hairColor, hairLength, nickname, photo } = formData;
+    const {
+      fullName,
+      gender,
+      dateOfBirth,
+      lastSeen,
+      lastLocation,
+      height,
+      weight,
+      eyeColor,
+      hairColor,
+      hairLength,
+      nickname,
+      photo,
+    } = formData;
 
-    if (!fullName || !gender || !dateOfBirth || !lastSeen || !lastLocation || !height || !weight || !eyeColor || !hairColor || !nickname || !hairLength || !photo) {
-      Alert.alert('Error', 'Please fill all required fields.');
+    if (
+      !fullName ||
+      !gender ||
+      !dateOfBirth ||
+      !lastSeen ||
+      !lastLocation ||
+      !height ||
+      !weight ||
+      !eyeColor ||
+      !hairColor ||
+      !nickname ||
+      !hairLength ||
+      !photo
+    ) {
+      ToastAndroid.show('Please fill all required fields.', ToastAndroid.LONG);
       return;
     }
 
     try {
       await dispatch(submitReport(formData)).unwrap();
-      Alert.alert('Success', 'Missing person report has been submitted.');
-      navigation.navigate('Home')
+
+      ToastAndroid.show(
+        'Missing person report has been submitted.',
+        ToastAndroid.LONG,
+      );
+      navigation.navigate('Home');
       dispatch(resetForm());
       setFormData({
         fullName: '',
@@ -86,16 +135,11 @@ export function useCombinedHook() {
     }
   };
 
-  // Profiles state
-  const [loading, setLoading] = useState(true); 
-  const [profiles, setProfiles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profilesError, setProfilesError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<any>(null);
-
- 
-
-
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -105,23 +149,22 @@ export function useCombinedHook() {
       .onSnapshot(
         querySnapshot => {
           const profilesData = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
+            unique: doc.id,
+            ...(doc.data() as Profile),
           }));
           setProfiles(profilesData);
           setLoading(false);
         },
         err => {
-          console.error('Error fetching profiles:', err);
           setProfilesError('Error fetching profiles');
           setLoading(false);
-        }
+        },
       );
 
     return () => unsubscribe();
   }, []);
 
-  const openModal = (profile: any) => {
+  const openModal = (profile: Profile) => {
     setSelectedProfile(profile);
     setModalVisible(true);
   };
@@ -131,9 +174,8 @@ export function useCombinedHook() {
     setSelectedProfile(null);
   };
 
-  // Filter state
-  const { filteredProfiles, selectedGender, searchQuery } = useSelector(
-    (state: RootState) => state.filterReport
+  const {filteredProfiles, selectedGender, searchQuery} = useSelector(
+    (state: RootState) => state.filterReport,
   );
 
   useEffect(() => {
@@ -159,6 +201,7 @@ export function useCombinedHook() {
     date,
     setDate,
     handleInputChange,
+
     handleDateChange,
     selectPhoto,
     submitReport: submitReportForm,

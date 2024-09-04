@@ -5,15 +5,14 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
-  StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import {useHomeScreenManager} from './useHome';
 import MissingPersonModal from '../../components/profileModal/ProfileModal';
 import {HeroSection} from '../../components/hero/Hero';
-import { IMAGES } from '../../constants/constants';
-
-import {styles} from "./HomeStyles"
+import {IMAGES} from '../../constants/constants';
+import {colors} from '../../constants/colors';
+import {styles} from './HomeStyles';
 
 export default function HomeScreen() {
   const {
@@ -24,25 +23,26 @@ export default function HomeScreen() {
     selectedProfile,
     openModal,
     closeModal,
-    loading
-  
+    loading,
   } = useHomeScreenManager();
 
   let error: undefined;
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: '#ffffff'}}>
+    <ScrollView style={{flex: 1, backgroundColor: colors.whitish}}>
       {error && (
-        <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>
+        <Text style={{color: colors.crimson, textAlign: 'center'}}>
+          {error}
+        </Text>
       )}
       <HeroSection
         searchQuery={searchQuery}
         handleSearchQueryChange={handleSearchQueryChange}
       />
 
-{loading ? (
+      {loading ? (
         <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#5A5DF6" />
+          <ActivityIndicator size="large" color={colors.skyBlue} />
         </View>
       ) : filteredProfiles.length === 0 ? (
         <Text style={styles.noDataText}>No profiles found.</Text>
@@ -54,18 +54,18 @@ export default function HomeScreen() {
           {filteredProfiles.map(profile => (
             <View key={profile.id} style={styles.profileCard}>
               <ImageBackground
-                source={{uri: profile.photo || IMAGES.kid}}
+                source={{uri: profile?.photo || IMAGES.kid}}
                 style={styles.profileImage}
                 imageStyle={{borderRadius: 10}}>
                 <View style={styles.overlay}>
                   <Text style={styles.missingText}>MISSING</Text>
                   <Text style={styles.profileDetails}>
-                    Name: {profile.fullName}
+                    Name: {profile?.fullName}
                     {'\n'}
-                    Age: {profile.age} ({profile.gender}){'\n'}
-                    Last Seen: {profile.lastSeen}
+                    Age: {profile?.age} ({profile?.gender}){'\n'}
+                    Last Seen: {profile?.lastSeen}
                     {'\n'}
-                    Last Seen Location: {profile.lastLocation}
+                    Last Seen Location: {profile?.lastLocation}
                   </Text>
                   <TouchableOpacity
                     style={styles.detailsButton}

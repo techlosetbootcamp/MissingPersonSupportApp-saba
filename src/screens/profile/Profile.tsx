@@ -1,22 +1,21 @@
-
-import { useProfile } from './useProfile';
+import {useProfile} from './useProfile';
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView,  } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 
 import {useAppNavigation} from '../../utils/AppNavigation';
-import {styles} from "./ProfileStyles"
-import { IMAGES } from '../../constants/constants';
+import {styles} from './ProfileStyles';
+import {IMAGES} from '../../constants/constants';
 const EditProfileScreen: React.FC = () => {
   const navigation = useAppNavigation();
-  const {
-    name,
-    email,
-    photo,
-    setName,
-    selectImage,
-    handleSave,
-    signOut,
-  } = useProfile();
+  const {name, email, photo, setName, selectImage, handleSave, signOut} =
+    useProfile();
 
   return (
     <View style={styles.container}>
@@ -33,7 +32,7 @@ const EditProfileScreen: React.FC = () => {
       <ScrollView>
         <View style={styles.imageContainer}>
           <Image
-            source={photo ? { uri: photo } : IMAGES.user}
+            source={photo ? {uri: photo} : IMAGES?.user}
             style={styles.profileImage}
           />
           <TouchableOpacity style={styles.editIcon} onPress={selectImage}>
@@ -63,7 +62,6 @@ const EditProfileScreen: React.FC = () => {
             />
           </View>
         </View>
-
       </ScrollView>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
@@ -73,8 +71,4 @@ const EditProfileScreen: React.FC = () => {
   );
 };
 
- 
-
 export default EditProfileScreen;
-
-

@@ -1,15 +1,16 @@
 
 import { StyleSheet } from "react-native";
+import { colors } from "../../constants/colors";
 export const styles = StyleSheet.create({
     label: {
-        color: '#000000',
+        color: colors.charcoal,
         fontWeight: '500',
         fontSize: 14,
         marginBottom: 6,
       },
       input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: colors.lightGray,
         padding: 10,
         borderRadius: 5,
         marginBottom: 15,

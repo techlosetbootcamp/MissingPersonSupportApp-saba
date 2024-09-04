@@ -1,11 +1,7 @@
-// store/newsSlice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
-
-interface NewsState {
-  loading: boolean;
-  error: string | null;
-}
+import {fireError} from '../../types/types';
+import {NewsState} from '../../types/types';
 
 const initialState: NewsState = {
   loading: false,
@@ -28,7 +24,7 @@ export const addNewsReport = createAsyncThunk(
       description: string;
       reportedBy: string | null;
     },
-    { rejectWithValue }
+    {rejectWithValue},
   ) => {
     try {
       await firestore().collection('News').add({
@@ -39,23 +35,24 @@ export const addNewsReport = createAsyncThunk(
         reportedBy,
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
-    } catch (error:any) {
-      return rejectWithValue(error.message);
+    } catch (err) {
+      const error = err as fireError;
+      return rejectWithValue(error?.message);
     }
-  }
+  },
 );
 
 const newsSlice = createSlice({
   name: 'news',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(addNewsReport.pending, (state) => {
+      .addCase(addNewsReport.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addNewsReport.fulfilled, (state) => {
+      .addCase(addNewsReport.fulfilled, state => {
         state.loading = false;
       })
       .addCase(addNewsReport.rejected, (state, action) => {

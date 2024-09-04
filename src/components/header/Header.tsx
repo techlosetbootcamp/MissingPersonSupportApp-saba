@@ -1,4 +1,4 @@
-// components/Header.tsx
+
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import {IMAGES} from '../../constants/constants';
