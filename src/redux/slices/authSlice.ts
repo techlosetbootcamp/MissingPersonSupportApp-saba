@@ -15,16 +15,8 @@ const initialState: AuthState = {
 };
 
 GoogleSignin.configure({
-  webClientId:
-    '305312098206-lo6d29tjpa69c5d0deecr69fab489il7.apps.googleusercontent.com',
+  webClientId: process.env.WEB_CLIENT_ID,
 });
-
-export type AxiosError = {
-  response?: {
-    data: string;
-  };
-  message: string;
-};
 
 export const loginAsync = createAsyncThunk<
   AuthState['user'],
@@ -67,7 +59,6 @@ export const googleLoginAsync = createAsyncThunk<
     return rejectWithValue(error?.message);
   }
 });
-
 
 export const registerAsync = createAsyncThunk<
   AuthState['user'],

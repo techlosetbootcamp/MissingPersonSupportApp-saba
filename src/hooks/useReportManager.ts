@@ -19,7 +19,7 @@ import {
 import {useAppNavigation} from '../utils/AppNavigation';
 import {ToastAndroid} from 'react-native';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
-import {Profile} from '../types/types';
+
 
 export function useCombinedHook() {
   const dispatch = useAppDispatch();
@@ -48,8 +48,13 @@ export function useCombinedHook() {
     key: keyof typeof formData,
     value: string | Date | number | null,
   ) => {
-    setFormData(prev => ({...prev, [key]: value}));
-    dispatch(updateFormField({key, value}));
+    const updatedValue =
+      key === 'dateOfBirth' && value instanceof Date
+        ? value.toISOString()
+        : value;
+
+    setFormData(prev => ({...prev, [key]: updatedValue}));
+    dispatch(updateFormField({key, value: updatedValue}));
   };
 
   const handleDateChange = (
@@ -110,9 +115,7 @@ export function useCombinedHook() {
     try {
       await dispatch(submitReport(formData)).unwrap();
 
-      ToastAndroid.show(
-        'Missing person report has been submitted.',
-        ToastAndroid.LONG,
+      ToastAndroid.show( 'Missing person report has been submitted.', ToastAndroid.LONG,
       );
       navigation.navigate('Home');
       dispatch(resetForm());
@@ -136,10 +139,10 @@ export function useCombinedHook() {
   };
 
   const [loading, setLoading] = useState(true);
-  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [profiles, setProfiles] = useState<any[]>([]);
   const [profilesError, setProfilesError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<any>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -149,8 +152,8 @@ export function useCombinedHook() {
       .onSnapshot(
         querySnapshot => {
           const profilesData = querySnapshot.docs.map(doc => ({
-            unique: doc.id,
-            ...(doc.data() as Profile),
+            id: doc.id,
+            ...doc.data(),
           }));
           setProfiles(profilesData);
           setLoading(false);
@@ -164,7 +167,7 @@ export function useCombinedHook() {
     return () => unsubscribe();
   }, []);
 
-  const openModal = (profile: Profile) => {
+  const openModal = (profile: any) => {
     setSelectedProfile(profile);
     setModalVisible(true);
   };
@@ -201,7 +204,6 @@ export function useCombinedHook() {
     date,
     setDate,
     handleInputChange,
-
     handleDateChange,
     selectPhoto,
     submitReport: submitReportForm,

@@ -67,15 +67,18 @@ const reportFormSlice = createSlice({
     updateFormField: (state, action) => {
       const {key, value} = action.payload;
       if (key === 'dateOfBirth') {
-        state.dateOfBirth = new Date(value).toISOString();
+        state.dateOfBirth = new Date(value as string).toISOString();
+      } else if (key in state) {
+        (state as any)[key] = value;
       } else {
-        Alert.alert(`Type mismatch for field ${key}`);
+        Alert.alert(`Unknown field ${key}`);
       }
     },
     resetForm: state => {
       Object.assign(state, initialState);
     },
   },
+
   extraReducers: builder => {
     builder
       .addCase(submitReport.pending, state => {
@@ -95,3 +98,4 @@ const reportFormSlice = createSlice({
 export const {updateFormField, resetForm} = reportFormSlice.actions;
 
 export default reportFormSlice.reducer;
+

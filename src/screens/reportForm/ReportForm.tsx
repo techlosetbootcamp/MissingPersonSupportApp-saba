@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-
+import React from 'react';
 import {
   View,
   Text,
@@ -8,7 +7,6 @@ import {
   ScrollView,
 } from 'react-native';
 import {useCombinedHook} from '../../hooks/useReportManager';
-
 import Header from '../../components/header/Header';
 import {useAppNavigation} from '../../utils/AppNavigation';
 import BasicDetailsSection from '../../components/basicDetailsForm/BasicDetailsForm';
@@ -27,7 +25,6 @@ export default function ReportMissingPerson() {
     date,
     setDate,
     handleInputChange,
-
     handleDateChange,
     selectPhoto,
     submitReport,

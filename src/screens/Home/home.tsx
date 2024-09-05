@@ -45,7 +45,7 @@ export default function HomeScreen() {
           <ActivityIndicator size="large" color={colors.skyBlue} />
         </View>
       ) : filteredProfiles.length === 0 ? (
-        <Text style={styles.noDataText}>No profiles found.</Text>
+        <Text style={styles.noDataText}>No reports found.</Text>
       ) : (
         <ScrollView
           horizontal={true}

@@ -28,13 +28,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             onChangeText={handleSearchQueryChange}
           />
           <TouchableOpacity>
-            <Image source={IMAGES.search} />
+            <Image source={IMAGES?.search} />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.bannerContainer}>
-        <Image source={IMAGES.banner} style={styles.bannerImage} />
+        <Image source={IMAGES?.banner} style={styles.bannerImage} />
       </View>
 
       <View style={styles.sectionHeader}>

@@ -16,4 +16,5 @@ export const colors = {
   ashGray: '#d0d5dd',
   onyx: '#222526',
   lightGray: '#ccc',
+  transparent:"#00000080",
 };

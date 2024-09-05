@@ -3,7 +3,7 @@ import {View, Text, TextInput, Button} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {styles} from './LastSeenSectionStyles';
 import {LastSeenSectionProps} from '../../types/types';
-
+import {colors} from '../../constants/colors';
 const LastSeenSection: React.FC<LastSeenSectionProps> = ({
   lastLocation,
   lastSeen,
@@ -48,7 +48,7 @@ const LastSeenSection: React.FC<LastSeenSectionProps> = ({
             <Button
               title="Cancel"
               onPress={() => setShowPicker(false)}
-              color="red"
+              color={colors.crimson}
             />
           </View>
         )}

@@ -51,7 +51,7 @@ function BottomNavigation() {
               <Text
                 style={[
                   styles.tabBarLabel,
-                  {color: focused ? 'blue' : 'black'},
+                  {color: focused ? colors.skyBlue : colors.charcoal},
                 ]}>
                 {route.name}
               </Text>

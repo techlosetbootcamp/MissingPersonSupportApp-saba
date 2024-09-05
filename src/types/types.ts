@@ -18,11 +18,27 @@ export type FieldProps = {
 };
 
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+
 export type BasicDetailsSectionProps = {
-  formData: FormData;
-  handleInputChange: (key: keyof FormData, value: string) => void;
+  formData: any;
+  handleInputChange: (
+    field:
+      | 'fullName'
+      | 'gender'
+      | 'nickname'
+      | 'height'
+      | 'weight'
+      | 'eyeColor'
+      | 'hairColor'
+      | 'hairLength'
+      | 'lastSeen'
+      | 'lastLocation'
+      | 'dateOfBirth'
+      | 'photo',
+    value: string,
+  ) => void;
   showDatePicker: boolean;
-  setShowDatePicker: (show: boolean) => void;
+  setShowDatePicker: (value: boolean) => void;
   handleDateChange: (event: DateTimePickerEvent, selectedDate?: Date) => void;
 };
 
@@ -159,12 +175,13 @@ export type LastSeenSectionProps = {
       | 'lastLocation'
       | 'dateOfBirth'
       | 'photo',
-    value: string,
+    value: string | Date,
   ) => void;
 
   setShowPicker: (value: boolean) => void;
   setDate: (date: Date) => void;
 };
+
 export type LogoProps = {
   color?: string;
   size?: string;

@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.slateGray,
+    borderColor: colors.lightGray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: colors.slateGray,
+    borderColor: colors.lightGray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
