@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import {useSelector} from 'react-redux';
 import {useAppDispatch} from './useDispatch';
 import {RootState} from '../redux/store';
@@ -19,7 +20,6 @@ import {
 import {useAppNavigation} from '../utils/AppNavigation';
 import {ToastAndroid} from 'react-native';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
-
 
 export function useCombinedHook() {
   const dispatch = useAppDispatch();
@@ -74,7 +74,22 @@ export function useCombinedHook() {
     });
 
     if (response.assets && response.assets.length > 0) {
-      handleInputChange('photo', response.assets[0].uri || null);
+      const uri = response.assets[0].uri;
+
+      if (uri) {
+        const filename = uri.substring(uri.lastIndexOf('/') + 1);
+        const reference = storage().ref(filename);
+
+        try {
+          await reference.putFile(uri);
+          const downloadUrl = await reference.getDownloadURL();
+          handleInputChange('photo', downloadUrl);
+        } catch (error) {
+          Alert.alert('Upload Error', 'Failed to upload image.');
+        }
+      } else {
+        Alert.alert('Error', 'No valid image URI found.');
+      }
     }
   };
 
@@ -115,7 +130,9 @@ export function useCombinedHook() {
     try {
       await dispatch(submitReport(formData)).unwrap();
 
-      ToastAndroid.show( 'Missing person report has been submitted.', ToastAndroid.LONG,
+      ToastAndroid.show(
+        'Missing person report has been submitted.',
+        ToastAndroid.LONG,
       );
       navigation.navigate('Home');
       dispatch(resetForm());

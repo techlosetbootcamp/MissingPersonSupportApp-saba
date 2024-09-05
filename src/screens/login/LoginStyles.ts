@@ -7,11 +7,12 @@ export const styles = StyleSheet.create({
   bottomImage: {
     position: 'absolute',
     bottom: 0,
+    marginTop:10,
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: colors.whitish,
   },
   logo: {

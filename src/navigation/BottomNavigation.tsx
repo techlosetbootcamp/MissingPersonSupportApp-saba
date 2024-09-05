@@ -8,10 +8,9 @@ import {
   ProfileScreen,
   News,
 } from '../constants/constants';
-
-import {Image, View, StyleSheet, Text} from 'react-native';
-
+import {Image, View, StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {IMAGES} from '../constants/constants';
+
 const homeIcon = IMAGES?.home;
 const reportsIcon = IMAGES?.report;
 const uploadIcon = IMAGES?.upload;
@@ -21,6 +20,9 @@ const NewsIcon = IMAGES?.news;
 const Tab = createBottomTabNavigator();
 
 function BottomNavigation() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height; 
+
   return (
     <View style={styles.container}>
       <Tab.Navigator
@@ -51,7 +53,10 @@ function BottomNavigation() {
               <Text
                 style={[
                   styles.tabBarLabel,
-                  {color: focused ? colors.skyBlue : colors.charcoal},
+                  { 
+                    color: focused ? colors.skyBlue : colors.charcoal,
+                    marginLeft: isLandscape ? 15 : 0, 
+                  },
                 ]}>
                 {route.name}
               </Text>
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
   tabBarLabel: {
     fontSize: 12,
     color: colors.charcoal,
-    fontWeight: 400,
+    fontWeight: '400',
   },
 });
 
