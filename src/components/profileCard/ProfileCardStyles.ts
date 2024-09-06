@@ -18,15 +18,17 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
+    fontFamily:'Familjen Grotesk',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '400',
     marginBottom: 4,
     color: colors.charcoal,
   },
   details: {
+    fontFamily:'Familjen Grotesk',
     fontSize: 16,
     marginBottom: 2,
-    fontWeight: 'bold',
+    fontWeight: '400',
     color: colors.charcoal,
   },
   detailsButton: {
