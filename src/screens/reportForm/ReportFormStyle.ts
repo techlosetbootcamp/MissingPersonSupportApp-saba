@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet,Dimensions} from 'react-native';
 import {colors} from '../../constants/colors';
+const { width } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   horizontalLine: {
     borderBottomColor: colors.charcoal,
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   },
 
   submitButton: {
-    width: '50%',
+     width: width * 0.6,
     backgroundColor: colors.skyBlue,
     paddingHorizontal: 17,
     paddingVertical: 7,
@@ -45,8 +46,8 @@ export const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: colors.buttonText,
-    fontSize: 23,
-    fontWeight: 'bold',
+   fontSize: width > 350 ? 23 : 18,
+    fontWeight: '500',
     fontFamily: 'Montserrat',
   },
 

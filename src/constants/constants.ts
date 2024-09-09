@@ -1,4 +1,10 @@
-import {FieldProps, FormData, HandleInputChange} from '../types/types';
+import {
+  FieldProps,
+  FormData,
+  HandleInputChange,
+  InputConfig,
+  InputField,
+} from '../types/types';
 
 export const getPhysicalDescriptionFields = (
   formData: FormData,
@@ -7,13 +13,13 @@ export const getPhysicalDescriptionFields = (
   {
     label: 'Height',
     value: formData.height,
-    placeholder: 'Height',
+    placeholder: 'Height (cm)',
     onChange: text => handleInputChange('height', text),
   },
   {
     label: 'Weight',
     value: formData.weight,
-    placeholder: 'Weight',
+    placeholder: 'Weight (kg)',
     onChange: text => handleInputChange('weight', text),
   },
   {
@@ -40,18 +46,6 @@ export const FORGOT_PASSWORD = {
   instructions:
     "Please enter the email address associated with your account. We'll send you a verification code to reset your password.",
 };
-
-import {KeyboardTypeOptions} from 'react-native';
-
-interface InputConfig {
-  label: string;
-  placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  secureTextEntry: boolean;
-  helperText: string | null;
-  keyboardType: KeyboardTypeOptions;
-}
 
 export const getInputs = (
   username: string,
@@ -89,17 +83,6 @@ export const getInputs = (
     keyboardType: 'default',
   },
 ];
-
-export type InputField = {
-  label: string;
-  placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  keyboardType: KeyboardTypeOptions;
-  secureTextEntry: boolean;
-  icon?: any;
-  infoText?: string;
-};
 
 export const getInputConfig = (
   email: string,
@@ -154,7 +137,6 @@ import Register from '../screens/register/Register';
 import Login from '../screens/login/Login';
 import ForgotPassword from '../screens/forgotPassword/ForgotPassword';
 import Splash from '../screens/splash/Splash';
-
 import ReportForm from '../screens/reportForm/ReportForm';
 import FilterReport from '../screens/filterReport/FilterReport';
 import ProfileScreen from '../screens/profile/Profile';

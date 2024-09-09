@@ -1,18 +1,21 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image,ActivityIndicator} from 'react-native';
 import {IMAGES} from '../../constants/constants';
 import {styles} from './PhotoUploadSectionStyles';
 import {PhotoUploadSectionProp} from '../../types/types';
-
+import { colors } from '../../constants/colors';
 const PhotoUploadSection: React.FC<PhotoUploadSectionProp> = ({
   photo,
   selectPhoto,
+  isloading,
 }) => {
   return (
     <>
       <Text style={styles.title}>Upload Photographs</Text>
       <TouchableOpacity style={styles.photoUpload} onPress={selectPhoto}>
-        {photo ? (
+        {isloading ? (
+          <ActivityIndicator size="large" color={colors.skyBlue} /> 
+        ) : photo ? (
           <Image source={{uri: photo}} style={styles.uploadedImage} />
         ) : (
           <View style={styles.uploadContent}>

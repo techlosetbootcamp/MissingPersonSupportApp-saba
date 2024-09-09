@@ -4,8 +4,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  ScrollView, 
 } from 'react-native';
+
 import {useCombinedHook} from '../../hooks/useReportManager';
 import Header from '../../components/header/Header';
 import {useAppNavigation} from '../../utils/AppNavigation';
@@ -28,6 +29,8 @@ export default function ReportMissingPerson() {
     handleDateChange,
     selectPhoto,
     submitReport,
+    isloading
+
   } = useCombinedHook();
   const physicalDescriptionFields = getPhysicalDescriptionFields(
     formData,
@@ -73,7 +76,7 @@ export default function ReportMissingPerson() {
         </View>
       ))}
 
-      <PhotoUploadSection photo={formData?.photo} selectPhoto={selectPhoto} />
+      <PhotoUploadSection photo={formData?.photo} selectPhoto={selectPhoto}  isloading={isloading} />
 
       <View style={styles.horizontalLine} />
 

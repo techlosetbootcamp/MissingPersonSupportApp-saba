@@ -9,6 +9,7 @@ import {useAppNavigation} from '../../utils/AppNavigation';
 import ProfileCard from '../../components/profileCard/ProfileCard';
 import {styles} from './FilterReportStyles';
 import {colors} from '../../constants/colors';
+import {ProfileCardProps} from "../../types/types"
 const AllMissingPersonsScreen = () => {
   const navigation = useAppNavigation();
   const {
@@ -49,7 +50,10 @@ const AllMissingPersonsScreen = () => {
         <FlatList
           data={filteredProfiles}
           renderItem={({item}) => (
-            <ProfileCard profile={item} onPress={() => openModal(item)} />
+            <ProfileCard
+            profile={item as ProfileCardProps['profile']}
+            onPress={() => openModal(item)}
+          />
           )}
           keyExtractor={item => item?.id}
           contentContainerStyle={styles.listContent}

@@ -1,5 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
+import {Profile} from '../../types/types';
 
 export const fetchReports = createAsyncThunk(
   'filterReport/fetchReports',
@@ -16,6 +17,13 @@ export const fetchReports = createAsyncThunk(
       lastSeen: doc?.data()?.lastSeen,
       lastLocation: doc?.data()?.lastLocation,
       photo: doc?.data()?.photo,
+      dateOfBirth: doc?.data()?.dateOfBirth || '',
+      nickname: doc?.data()?.nickname || '',
+      height: doc?.data()?.height || '',
+      weight: doc?.data()?.weight || '',
+      hairColor: doc?.data()?.hairColor || '',
+      hairLength: doc?.data()?.hairLength || '',
+      eyeColor: doc?.data()?.eyeColor || '',
     }));
     return reportsData;
   },
@@ -24,8 +32,8 @@ export const fetchReports = createAsyncThunk(
 const filterReportSlice = createSlice({
   name: 'filterReport',
   initialState: {
-    profiles: [] as any[],
-    filteredProfiles: [] as any[],
+    profiles: [] as Profile[],
+    filteredProfiles: [] as Profile[],
     selectedGender: null as string | null,
     searchQuery: '',
     error: null as string | null,

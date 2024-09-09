@@ -10,7 +10,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({profile, onPress}) => {
       <View style={styles.info}>
         <Text style={styles.name}>Name: {profile?.fullName}</Text>
         <Text style={styles.details}>
-          Age: {profile?.age} ({profile?.gender})
+          Age: {profile?.age ?? 'Date of birth not available'} ({profile?.gender})
         </Text>
         <Text style={styles.details}>Last Seen: {profile?.lastSeen}</Text>
         <Text style={styles.details}>

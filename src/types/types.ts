@@ -16,11 +16,8 @@ export type FieldProps = {
   onChange: (text: string) => void;
   type?: string;
 };
-
-import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
-
 export type BasicDetailsSectionProps = {
-  formData: any;
+  formData: FormData;
   handleInputChange: (
     field:
       | 'fullName'
@@ -39,9 +36,14 @@ export type BasicDetailsSectionProps = {
   ) => void;
   showDatePicker: boolean;
   setShowDatePicker: (value: boolean) => void;
-  handleDateChange: (event: DateTimePickerEvent, selectedDate?: Date) => void;
+  handleDateChange: (
+    event: CustomDateTimePickerEvent,
+    selectedDate?: Date,
+  ) => void;
 };
-
+export type CustomDateTimePickerEvent = {
+  type: string;
+};
 export type FormData = {
   fullName: string;
   gender: string;
@@ -64,13 +66,7 @@ export type fireError = {
   message: string;
 };
 
-export type PhotoUploadSectionProps = {
-  photo: string;
-  selectPhoto: () => void;
-};
-
 export type HandleInputChange = (field: keyof FormData, value: string) => void;
-
 export type MissingPerson = {
   id: string;
   fullName: string;
@@ -95,23 +91,22 @@ export type RootStackParams = {
 };
 
 export type Profile = {
-  dateOfBirth: Date;
-  eyeColor: string;
+  id: string;
   fullName: string;
   gender: string;
-  hairColor: string;
-  hairLength: string;
-  height: string;
+  dateOfBirth: string;
+  nickname: string;
   lastLocation: string;
   lastSeen: string;
-  nickname: string;
-  photo: string;
-  timestamp: Date;
+  height: string;
   weight: string;
-  id: string;
-
+  eyeColor: string;
+  hairColor: string;
+  hairLength: string;
+  photo: string;
   age: number;
 };
+
 export type AuthState = {
   loading: boolean;
   error: string | null;
@@ -125,11 +120,6 @@ export type AuthState = {
   } | null;
 };
 
-export type Profiles = {
-  fullName: string;
-  gender: string;
-  lastLocation: string;
-};
 export type NewsState = {
   loading: boolean;
   error: string | null;
@@ -155,7 +145,7 @@ export type ReportFormState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
-
+export type FormFieldKey = keyof ReportFormState;
 export type LastSeenSectionProps = {
   lastLocation: string;
   lastSeen: string;
@@ -189,6 +179,7 @@ export type LogoProps = {
 export type PhotoUploadSectionProp = {
   photo: string | null;
   selectPhoto: () => void;
+  isloading: boolean;
 };
 
 export type ProfileCardProps = {
@@ -227,4 +218,24 @@ export type SearchBarProps = {
 };
 export type error = {
   error: undefined;
+};
+import {KeyboardTypeOptions} from 'react-native';
+export type InputConfig = {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry: boolean;
+  helperText: string | null;
+  keyboardType: KeyboardTypeOptions;
+};
+export type InputField = {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  keyboardType: KeyboardTypeOptions;
+  secureTextEntry: boolean;
+  icon?: any;
+  infoText?: string;
 };

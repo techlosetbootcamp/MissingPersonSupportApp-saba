@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Alert} from 'react-native';
+import {Alert, ToastAndroid} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -18,8 +18,9 @@ import {
   filterProfiles,
 } from '../redux/slices/filterReportSlice';
 import {useAppNavigation} from '../utils/AppNavigation';
-import {ToastAndroid} from 'react-native';
-import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+
+import {CustomDateTimePickerEvent} from '../types/types';
+import {Profile} from '../types/types';
 
 export function useCombinedHook() {
   const dispatch = useAppDispatch();
@@ -35,7 +36,7 @@ export function useCombinedHook() {
     eyeColor: '',
     hairColor: '',
     hairLength: '',
-    photo: null as string | null,
+    photo: null,
     lastSeen: '',
     lastLocation: '',
   });
@@ -43,7 +44,7 @@ export function useCombinedHook() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
-
+  const [isloading, setIsloading] = useState(false);
   const handleInputChange = (
     key: keyof typeof formData,
     value: string | Date | number | null,
@@ -58,7 +59,7 @@ export function useCombinedHook() {
   };
 
   const handleDateChange = (
-    event: DateTimePickerEvent,
+    event: CustomDateTimePickerEvent,
     selectedDate: Date | undefined,
   ) => {
     const currentDate = selectedDate || new Date(formData?.dateOfBirth);
@@ -68,6 +69,7 @@ export function useCombinedHook() {
   };
 
   const selectPhoto = async () => {
+    setIsloading(true); 
     const response = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
@@ -91,6 +93,7 @@ export function useCombinedHook() {
         Alert.alert('Error', 'No valid image URI found.');
       }
     }
+    setIsloading(false); 
   };
 
   const submitReportForm = async () => {
@@ -156,10 +159,10 @@ export function useCombinedHook() {
   };
 
   const [loading, setLoading] = useState(true);
-  const [profiles, setProfiles] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profilesError, setProfilesError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<any>(null);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -168,10 +171,13 @@ export function useCombinedHook() {
       .orderBy('timestamp', 'desc')
       .onSnapshot(
         querySnapshot => {
-          const profilesData = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const profilesData: Profile[] = querySnapshot.docs.map(
+            doc =>
+              ({
+                id: doc.id,
+                ...doc.data(),
+              } as Profile),
+          );
           setProfiles(profilesData);
           setLoading(false);
         },
@@ -184,7 +190,7 @@ export function useCombinedHook() {
     return () => unsubscribe();
   }, []);
 
-  const openModal = (profile: any) => {
+  const openModal = (profile: Profile) => {
     setSelectedProfile(profile);
     setModalVisible(true);
   };
@@ -236,5 +242,6 @@ export function useCombinedHook() {
     loading,
     handleSearchQueryChange,
     handleGenderChange,
+    isloading,
   };
 }

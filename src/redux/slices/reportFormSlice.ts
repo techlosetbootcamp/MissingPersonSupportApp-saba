@@ -1,8 +1,8 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import {ReportFormState} from '../../types/types';
-import {Alert} from 'react-native';
-
+import {handleFormFieldUpdate} from '../../utils/formFieldHandlers';
+import {calculateAge} from '../../utils/calculateAge';
 const initialState: ReportFormState = {
   fullName: '',
   gender: '',
@@ -29,6 +29,7 @@ export const submitReport = createAsyncThunk(
     try {
       const birthDate = new Date(formData.dateOfBirth);
       const age = calculateAge(birthDate);
+
       await firestore()
         .collection('Reports')
         .add({
@@ -46,34 +47,15 @@ export const submitReport = createAsyncThunk(
   },
 );
 
-function calculateAge(birthDate: Date) {
-  const today = new Date();
-  let age = today?.getFullYear() - birthDate?.getFullYear();
-  const monthDifference = today?.getMonth() - birthDate?.getMonth();
-
-  if (
-    monthDifference < 0 ||
-    (monthDifference === 0 && today?.getDate() < birthDate?.getDate())
-  ) {
-    age--;
-  }
-  return age;
-}
-
 const reportFormSlice = createSlice({
   name: 'reportForm',
   initialState,
   reducers: {
     updateFormField: (state, action) => {
       const {key, value} = action.payload;
-      if (key === 'dateOfBirth') {
-        state.dateOfBirth = new Date(value as string).toISOString();
-      } else if (key in state) {
-        (state as any)[key] = value;
-      } else {
-        Alert.alert(`Unknown field ${key}`);
-      }
+      handleFormFieldUpdate(state, key, value);
     },
+
     resetForm: state => {
       Object.assign(state, initialState);
     },
@@ -96,6 +78,4 @@ const reportFormSlice = createSlice({
 });
 
 export const {updateFormField, resetForm} = reportFormSlice.actions;
-
 export default reportFormSlice.reducer;
-
